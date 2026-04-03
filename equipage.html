@@ -4,9 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>Charisma • Poste de conduite</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Charisma">
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -18,7 +22,7 @@
         body {
             background: #f5f7fb;
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            color: #1a1a2e;
+            color: #1a2c3e;
             padding: 20px;
         }
 
@@ -27,7 +31,6 @@
             margin: 0 auto;
         }
 
-        /* Header */
         .app-header {
             background: white;
             border-radius: 28px;
@@ -37,7 +40,7 @@
             justify-content: space-between;
             align-items: center;
             box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-            border: 1px solid rgba(0,0,0,0.05);
+            border: 1px solid #eef2f6;
         }
 
         .header-title {
@@ -58,13 +61,12 @@
             color: #2c5a8c;
         }
 
-        /* Cartes */
         .card {
             background: white;
             border-radius: 28px;
             padding: 24px;
             margin-bottom: 20px;
-            border: 1px solid rgba(0,0,0,0.05);
+            border: 1px solid #eef2f6;
             transition: all 0.2s;
         }
 
@@ -77,7 +79,6 @@
             gap: 10px;
         }
 
-        /* Sélection ligne */
         .route-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -115,7 +116,6 @@
             color: #6c757d;
         }
 
-        /* Boutons */
         .btn-primary {
             background: linear-gradient(135deg, #2c5a8c, #1e3c72);
             color: white;
@@ -149,7 +149,6 @@
             transition: all 0.2s;
         }
 
-        /* Panneau statut */
         .status-panel {
             background: linear-gradient(135deg, #e8f5e9, #f0f6ff);
             border-radius: 20px;
@@ -168,7 +167,6 @@
             margin-top: 4px;
         }
 
-        /* Progression */
         .progress-container {
             margin: 20px 0;
         }
@@ -195,7 +193,6 @@
             color: #6c757d;
         }
 
-        /* Liste arrêts */
         .stops-list {
             display: flex;
             flex-direction: column;
@@ -252,7 +249,6 @@
             color: #f39c12;
         }
 
-        /* Section partage */
         .share-section {
             background: linear-gradient(135deg, #f0f6ff, #e8f0fe);
             border-radius: 24px;
@@ -301,7 +297,6 @@
             gap: 8px;
         }
 
-        /* Messages rapides */
         .messages-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -338,7 +333,6 @@
             font-size: 0.85rem;
         }
 
-        /* Historique */
         .history-list {
             max-height: 200px;
             overflow-y: auto;
@@ -352,7 +346,6 @@
             justify-content: space-between;
         }
 
-        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -409,14 +402,8 @@
         }
 
         @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(15px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .card, .share-section {
@@ -433,7 +420,7 @@
 
         <div id="selectionScreen">
             <div class="card">
-                <div class="card-title">📋 Sélection du service</div>
+                <div class="card-title">Sélection du service</div>
                 <div class="route-grid">
                     <div id="routeCharisma" class="route-card" onclick="selectRoute('charisma')">
                         <div class="route-icon">🚌</div>
@@ -469,7 +456,7 @@
             </div>
 
             <div class="share-section">
-                <div class="card-title" style="margin-bottom: 12px;">🔗 Partager le suivi</div>
+                <div class="card-title">Partager le suivi</div>
                 <div class="link-field">
                     <input type="text" id="shareLink" readonly>
                     <button class="btn-copy" onclick="copyLink()">Copier</button>
@@ -480,7 +467,7 @@
             </div>
 
             <div class="card">
-                <div class="card-title">💬 Communication voyageurs</div>
+                <div class="card-title">Communication voyageurs</div>
                 <div class="messages-grid">
                     <button class="msg-btn" onclick="sendMessage('Départ imminent dans 5 minutes')">Départ imminent</button>
                     <button class="msg-btn" onclick="sendMessage('Arrivée dans 5 minutes')">Arrivée proche</button>
@@ -494,14 +481,14 @@
             </div>
 
             <div class="card">
-                <div class="card-title">📋 Historique du service</div>
+                <div class="card-title">Historique du service</div>
                 <div class="history-list" id="historyList"></div>
             </div>
 
             <button class="btn-secondary" onclick="resetJourney()">⟳ Nouveau service</button>
         </div>
 
-        <div class="footer">Charisma Fleet Management • Poste de conduite sécurisé</div>
+        <div class="footer">Poste de conduite sécurisé</div>
     </div>
 
     <div id="passengerModal" class="modal">
@@ -543,29 +530,29 @@
 
         const ROUTES = {
             charisma: { stops: [
-                { id: "depart", name: "Départ Église", time: "Départ", message: "DÉPART Église" },
-                { id: "brement", name: "Brement", time: "Arrêt 1", message: "ARRIVÉE Brement" },
-                { id: "noisy", name: "Noisy-le-Sec", time: "Arrêt 2", message: "ARRIVÉE Noisy" },
-                { id: "retour", name: "Retour Église", time: "Arrivée", message: "RETOUR Église" }
+                { id: "depart", name: "Départ Église", time: "Départ", message: "DÉPART Église", skipCounting: true },
+                { id: "brement", name: "Brement", time: "Arrêt 1", message: "ARRIVÉE Brement", skipCounting: false },
+                { id: "noisy", name: "Noisy-le-Sec", time: "Arrêt 2", message: "ARRIVÉE Noisy", skipCounting: false },
+                { id: "retour", name: "Retour Église", time: "Arrivée", message: "RETOUR Église", skipCounting: true }
             ] },
             navieo: { stops: [
-                { id: "chelles", name: "Chelles", time: "07:55", message: "DÉPART Chelles" },
-                { id: "mairie", name: "Mairie", time: "08:00", message: "ARRIVÉE Mairie" },
-                { id: "gare", name: "Gare", time: "08:03", message: "ARRIVÉE Gare" },
-                { id: "neuilly", name: "Neuilly/Marne", time: "08:13", message: "ARRIVÉE Neuilly" },
-                { id: "lamare", name: "La Mare", time: "08:19", message: "ARRIVÉE La Mare" },
-                { id: "gagnyarena", name: "Gagny Arena", time: "08:21", message: "ARRIVÉE Gagny" },
-                { id: "jeanmoulin", name: "Jean Moulin", time: "08:24", message: "ARRIVÉE Jean Moulin" },
-                { id: "henribarbusse", name: "Henri Barbusse", time: "08:27", message: "ARRIVÉE Barbusse" },
-                { id: "garegagny", name: "Gare de Gagny", time: "08:30", message: "ARRIVÉE Gare Gagny" },
-                { id: "chateau", name: "Château", time: "08:33", message: "ARRIVÉE Château" },
-                { id: "rosny", name: "Rosny", time: "08:36", message: "ARRIVÉE Rosny" },
-                { id: "van", name: "Van derheyden", time: "08:39", message: "ARRIVÉE Van" },
-                { id: "ruffins", name: "Ruffins", time: "08:49", message: "ARRIVÉE Ruffins" },
-                { id: "mairiemontreuil", name: "Mairie Montreuil", time: "08:59", message: "ARRIVÉE Mairie" },
-                { id: "croixchavaux", name: "Croix de Chavaux", time: "09:05", message: "ARRIVÉE Croix" },
-                { id: "gaulle", name: "Général de Gaulle", time: "09:08", message: "ARRIVÉE Gaulle" },
-                { id: "eglise", name: "Église", time: "09:30", message: "ARRIVÉE Église" }
+                { id: "chelles", name: "Chelles", time: "07:55", message: "DÉPART Chelles", skipCounting: true },
+                { id: "mairie", name: "Mairie", time: "08:00", message: "ARRIVÉE Mairie", skipCounting: false },
+                { id: "gare", name: "Gare", time: "08:03", message: "ARRIVÉE Gare", skipCounting: false },
+                { id: "neuilly", name: "Neuilly/Marne", time: "08:13", message: "ARRIVÉE Neuilly", skipCounting: false },
+                { id: "lamare", name: "La Mare", time: "08:19", message: "ARRIVÉE La Mare", skipCounting: false },
+                { id: "gagnyarena", name: "Gagny Arena", time: "08:21", message: "ARRIVÉE Gagny", skipCounting: false },
+                { id: "jeanmoulin", name: "Jean Moulin", time: "08:24", message: "ARRIVÉE Jean Moulin", skipCounting: false },
+                { id: "henribarbusse", name: "Henri Barbusse", time: "08:27", message: "ARRIVÉE Barbusse", skipCounting: false },
+                { id: "garegagny", name: "Gare de Gagny", time: "08:30", message: "ARRIVÉE Gare Gagny", skipCounting: false },
+                { id: "chateau", name: "Château", time: "08:33", message: "ARRIVÉE Château", skipCounting: false },
+                { id: "rosny", name: "Rosny", time: "08:36", message: "ARRIVÉE Rosny", skipCounting: false },
+                { id: "van", name: "Van derheyden", time: "08:39", message: "ARRIVÉE Van", skipCounting: false },
+                { id: "ruffins", name: "Ruffins", time: "08:49", message: "ARRIVÉE Ruffins", skipCounting: false },
+                { id: "mairiemontreuil", name: "Mairie Montreuil", time: "08:59", message: "ARRIVÉE Mairie", skipCounting: false },
+                { id: "croixchavaux", name: "Croix de Chavaux", time: "09:05", message: "ARRIVÉE Croix", skipCounting: false },
+                { id: "gaulle", name: "Général de Gaulle", time: "09:08", message: "ARRIVÉE Gaulle", skipCounting: false },
+                { id: "eglise", name: "Église", time: "09:30", message: "ARRIVÉE Église", skipCounting: true }
             ] }
         };
 
@@ -599,7 +586,13 @@
                     <div><div class="stop-name">${stop.message}</div><div class="stop-time">${stop.time}</div></div>
                     <div class="stop-status" id="status_${stop.id}">${idx === 0 ? 'À faire' : 'En attente'}</div>
                 `;
-                btn.onclick = () => askPassengers(stop.id, stop.message, idx);
+                btn.onclick = () => {
+                    if (stop.skipCounting) {
+                        finishStop(stop.id, stop.message, idx);
+                    } else {
+                        askPassengers(stop.id, stop.message, idx);
+                    }
+                };
                 container.appendChild(btn);
             });
         }
@@ -609,6 +602,16 @@
             currentPassengerCount = 0;
             document.getElementById('passengerCount').innerText = '0';
             document.getElementById('passengerModal').style.display = 'flex';
+        }
+
+        function finishStop(stopId, message, index) {
+            const now = new Date();
+            const time = now.toLocaleTimeString();
+            database.ref('bus-status').set({ etape: stopId, message: message, time: time, route: selectedRoute });
+            document.getElementById('status').innerHTML = `${message} • ${time}`;
+            updateStopButtons(stopId);
+            updateProgress();
+            if (index === stopsList.length - 1) showReport();
         }
 
         function confirmPassengers() {
@@ -705,7 +708,7 @@
             const total = Object.values(passengersData).reduce((a,b) => a+b, 0);
             const reportDiv = document.createElement('div');
             reportDiv.className = 'card';
-            reportDiv.innerHTML = `<div class="card-title">📊 Bilan du service</div><p style="font-size:2.2rem; font-weight:800; text-align:center;">${total}</p><p style="text-align:center;">passagers transportés</p><p style="text-align:center; font-size:0.8rem; margin-top:8px;">${stopsList.length} arrêts desservis</p>`;
+            reportDiv.innerHTML = `<div class="card-title">Bilan du service</div><p style="font-size:2.2rem; font-weight:800; text-align:center;">${total}</p><p style="text-align:center;">passagers transportés</p><p style="text-align:center; font-size:0.8rem; margin-top:8px;">${stopsList.length} arrêts desservis</p>`;
             document.getElementById('driverInterface').insertBefore(reportDiv, document.getElementById('driverInterface').children[4]);
         }
 

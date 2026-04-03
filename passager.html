@@ -26,7 +26,6 @@
             min-height: 100vh;
         }
 
-        /* Header */
         .app-header {
             background: rgba(255,255,255,0.98);
             backdrop-filter: blur(10px);
@@ -49,6 +48,13 @@
             font-size: 1.4rem;
             font-weight: 800;
             background: linear-gradient(135deg, #1e3c72, #2c5a8c);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .service-name.navieo {
+            background: linear-gradient(135deg, #1e6b5e, #2c8c6e);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
@@ -82,14 +88,12 @@
             color: #00a86b;
         }
 
-        /* Container */
         .container {
             max-width: 600px;
             margin: 0 auto;
             padding: 20px;
         }
 
-        /* État d'attente */
         .waiting-card {
             background: white;
             border-radius: 32px;
@@ -102,7 +106,6 @@
         .waiting-icon {
             width: 80px;
             height: 80px;
-            background: linear-gradient(135deg, #1e3c72, #2c5a8c);
             border-radius: 80px;
             display: flex;
             align-items: center;
@@ -110,6 +113,14 @@
             margin: 0 auto 24px;
             font-size: 2rem;
             color: white;
+        }
+
+        .waiting-icon.charisma {
+            background: linear-gradient(135deg, #1e3c72, #2c5a8c);
+        }
+
+        .waiting-icon.navieo {
+            background: linear-gradient(135deg, #1e6b5e, #2c8c6e);
         }
 
         .waiting-title {
@@ -123,24 +134,20 @@
             font-size: 0.85rem;
         }
 
-        /* Carte de visualisation */
-        .visualization-card {
-            background: white;
-            border-radius: 32px;
-            padding: 24px;
-            margin-bottom: 20px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.05);
-            border: 1px solid rgba(0,0,0,0.05);
-        }
-
-        /* Position actuelle */
         .current-stop-card {
-            background: linear-gradient(135deg, #1e3c72, #2c5a8c);
             border-radius: 28px;
             padding: 24px;
             margin-bottom: 24px;
             color: white;
             text-align: center;
+        }
+
+        .current-stop-card.charisma {
+            background: linear-gradient(135deg, #1e3c72, #2c5a8c);
+        }
+
+        .current-stop-card.navieo {
+            background: linear-gradient(135deg, #1e6b5e, #2c8c6e);
         }
 
         .current-label {
@@ -161,14 +168,13 @@
             opacity: 0.9;
         }
 
-        /* Carte des arrêts animée */
-        .route-map {
-            background: #f8fafd;
-            border-radius: 28px;
+        .visualization-card {
+            background: white;
+            border-radius: 32px;
             padding: 28px 20px;
             margin-bottom: 20px;
-            position: relative;
-            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.05);
+            border: 1px solid rgba(0,0,0,0.05);
         }
 
         .route-title {
@@ -181,7 +187,6 @@
             margin-bottom: 30px;
         }
 
-        /* Timeline animée */
         .animated-timeline {
             position: relative;
             padding: 20px 0;
@@ -222,7 +227,6 @@
         .stop-point {
             text-align: center;
             flex: 1;
-            cursor: pointer;
         }
 
         .stop-marker {
@@ -273,7 +277,6 @@
             color: #f39c12;
         }
 
-        /* Bus animé */
         .animated-bus {
             position: absolute;
             top: 50%;
@@ -286,7 +289,6 @@
         .bus-icon {
             width: 48px;
             height: 48px;
-            background: linear-gradient(135deg, #2c5a8c, #1e3c72);
             border-radius: 48px;
             display: flex;
             align-items: center;
@@ -297,12 +299,19 @@
             animation: busBounce 0.5s ease infinite alternate;
         }
 
+        .bus-icon.charisma {
+            background: linear-gradient(135deg, #2c5a8c, #1e3c72);
+        }
+
+        .bus-icon.navieo {
+            background: linear-gradient(135deg, #2c8c6e, #1e6b5e);
+        }
+
         @keyframes busBounce {
             from { transform: translateY(0); }
             to { transform: translateY(-3px); }
         }
 
-        /* Prochaine arrivée */
         .next-arrival {
             background: white;
             border-radius: 24px;
@@ -347,7 +356,90 @@
             font-weight: 600;
         }
 
-        /* Alertes */
+        .stops-list-compact {
+            background: white;
+            border-radius: 24px;
+            margin-top: 20px;
+            border: 1px solid #eef2f6;
+            overflow: hidden;
+        }
+
+        .compact-header {
+            padding: 16px 20px;
+            background: #f8fafd;
+            font-weight: 600;
+            font-size: 0.75rem;
+            border-bottom: 1px solid #eef2f6;
+        }
+
+        .compact-stop {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            border-bottom: 1px solid #f0f2f5;
+            gap: 12px;
+        }
+
+        .compact-stop:last-child {
+            border-bottom: none;
+        }
+
+        .compact-stop.completed {
+            background: #fafcfd;
+        }
+
+        .compact-stop.active {
+            background: #fff8f0;
+            border-left: 3px solid #f39c12;
+        }
+
+        .compact-number {
+            width: 28px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #6c757d;
+        }
+
+        .compact-stop.completed .compact-number {
+            color: #00a86b;
+        }
+
+        .compact-stop.active .compact-number {
+            color: #f39c12;
+        }
+
+        .compact-info {
+            flex: 1;
+        }
+
+        .compact-name {
+            font-weight: 500;
+            font-size: 0.85rem;
+        }
+
+        .compact-time {
+            font-size: 0.6rem;
+            color: #6c757d;
+            margin-top: 2px;
+        }
+
+        .compact-badge {
+            font-size: 0.6rem;
+            padding: 4px 10px;
+            border-radius: 20px;
+            background: #f8fafd;
+        }
+
+        .compact-stop.completed .compact-badge {
+            background: #e8f5e9;
+            color: #00a86b;
+        }
+
+        .compact-stop.active .compact-badge {
+            background: #fff3e0;
+            color: #f39c12;
+        }
+
         .alert-card {
             background: #fff8f0;
             border-radius: 20px;
@@ -359,7 +451,6 @@
             border: 1px solid #ffe0b5;
         }
 
-        /* Footer */
         .footer {
             text-align: center;
             padding: 20px;
@@ -372,7 +463,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .visualization-card, .current-stop-card, .next-arrival {
+        .visualization-card, .current-stop-card, .next-arrival, .stops-list-compact {
             animation: fadeIn 0.4s ease-out;
         }
     </style>
@@ -380,7 +471,7 @@
 <body>
     <div class="app-header">
         <div class="header-content">
-            <div class="service-name">Charisma</div>
+            <div class="service-name" id="serviceName">Bus Charisma</div>
             <div class="live-badge">
                 <div class="live-dot"></div>
                 <div class="live-text">En direct</div>
@@ -389,36 +480,31 @@
     </div>
 
     <div class="container">
-        <!-- Écran d'attente -->
         <div id="waitingState" class="waiting-card">
-            <div class="waiting-icon">🚌</div>
+            <div class="waiting-icon" id="waitingIcon">🚌</div>
             <div class="waiting-title">En attente du départ</div>
             <div class="waiting-text">Le bus n'a pas encore commencé son trajet.<br>Restez connecté.</div>
         </div>
 
-        <!-- Contenu principal -->
         <div id="mainContent" style="display: none;">
-            <!-- Position actuelle -->
-            <div class="current-stop-card">
+            <div class="current-stop-card" id="currentStopCard">
                 <div class="current-label">Position actuelle</div>
                 <div class="current-name" id="currentLocation">-</div>
                 <div class="current-time" id="currentTime">--:--</div>
             </div>
 
-            <!-- Carte animée des arrêts -->
             <div class="visualization-card">
-                <div class="route-title">Parcours</div>
+                <div class="route-title" id="routeTitle">Parcours</div>
                 <div class="animated-timeline" id="animatedTimeline">
                     <div class="timeline-line-bg"></div>
                     <div class="timeline-line-progress" id="timelineProgress"></div>
                     <div class="animated-bus" id="animatedBus">
-                        <div class="bus-icon">🚌</div>
+                        <div class="bus-icon" id="busIcon">🚌</div>
                     </div>
                     <div class="stops-container" id="stopsContainer"></div>
                 </div>
             </div>
 
-            <!-- Prochain arrêt -->
             <div class="next-arrival" id="nextArrivalCard">
                 <div class="arrival-icon">📍</div>
                 <div class="arrival-info">
@@ -428,7 +514,11 @@
                 </div>
             </div>
 
-            <!-- Alerte -->
+            <div class="stops-list-compact" id="compactStopsSection">
+                <div class="compact-header">Liste des arrêts</div>
+                <div id="compactStopsList"></div>
+            </div>
+
             <div id="alertCard" class="alert-card">
                 <span>⚠️</span>
                 <span id="alertMessage" style="flex:1;"></span>
@@ -451,14 +541,71 @@
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        const STOPS = [
-            { id: "depart", name: "Église", time: "Départ", emoji: "⛪" },
-            { id: "brement", name: "Brement", time: "Arrêt 1", emoji: "🏠" },
-            { id: "noisy", name: "Noisy", time: "Arrêt 2", emoji: "🚉" },
-            { id: "retour", name: "Retour", time: "Arrivée", emoji: "⛪" }
-        ];
+        // Récupérer l'itinéraire depuis l'URL (?route=charisma ou ?route=navieo)
+        const urlParams = new URLSearchParams(window.location.search);
+        let selectedRoute = urlParams.get('route') || 'charisma';
 
+        // Configuration des itinéraires
+        const ROUTES = {
+            charisma: {
+                name: "Bus Charisma",
+                icon: "🚌",
+                colorClass: "charisma",
+                busIcon: "🚌",
+                stops: [
+                    { id: "depart", name: "Église Charisma", time: "Départ", emoji: "⛪" },
+                    { id: "brement", name: "Brement", time: "Arrêt 1", emoji: "🏠" },
+                    { id: "noisy", name: "Noisy-le-Sec", time: "Arrêt 2", emoji: "🚉" },
+                    { id: "retour", name: "Retour Église", time: "Arrivée", emoji: "⛪" }
+                ]
+            },
+            navieo: {
+                name: "Navieo",
+                icon: "🚐",
+                colorClass: "navieo",
+                busIcon: "🚐",
+                stops: [
+                    { id: "chelles", name: "Chelles", time: "07:55", emoji: "🏭" },
+                    { id: "mairie", name: "Mairie", time: "08:00", emoji: "🏛️" },
+                    { id: "gare", name: "Gare", time: "08:03", emoji: "🚉" },
+                    { id: "neuilly", name: "Neuilly/Marne", time: "08:13", emoji: "🌊" },
+                    { id: "lamare", name: "La Mare", time: "08:19", emoji: "🌾" },
+                    { id: "gagnyarena", name: "Gagny Arena", time: "08:21", emoji: "🏟️" },
+                    { id: "jeanmoulin", name: "Jean Moulin", time: "08:24", emoji: "👤" },
+                    { id: "henribarbusse", name: "Henri Barbusse", time: "08:27", emoji: "📚" },
+                    { id: "garegagny", name: "Gare de Gagny", time: "08:30", emoji: "🚉" },
+                    { id: "chateau", name: "Château", time: "08:33", emoji: "🏰" },
+                    { id: "rosny", name: "Rosny", time: "08:36", emoji: "🌹" },
+                    { id: "van", name: "Van derheyden", time: "08:39", emoji: "🏠" },
+                    { id: "ruffins", name: "Ruffins", time: "08:49", emoji: "🏘️" },
+                    { id: "mairiemontreuil", name: "Mairie Montreuil", time: "08:59", emoji: "🏛️" },
+                    { id: "croixchavaux", name: "Croix de Chavaux", time: "09:05", emoji: "✝️" },
+                    { id: "gaulle", name: "Général de Gaulle", time: "09:08", emoji: "👨‍✈️" },
+                    { id: "eglise", name: "Église CHARISMA", time: "09:30", emoji: "⛪" }
+                ]
+            }
+        };
+
+        const route = ROUTES[selectedRoute];
+        const STOPS = route.stops;
         let currentStopIndex = -1;
+
+        // Appliquer les classes CSS selon l'itinéraire
+        function applyRouteStyles() {
+            const serviceName = document.getElementById('serviceName');
+            const waitingIcon = document.getElementById('waitingIcon');
+            const currentStopCard = document.getElementById('currentStopCard');
+            const busIcon = document.getElementById('busIcon');
+            
+            serviceName.innerHTML = route.name;
+            serviceName.className = `service-name ${route.colorClass}`;
+            waitingIcon.className = `waiting-icon ${route.colorClass}`;
+            waitingIcon.innerHTML = route.icon;
+            currentStopCard.className = `current-stop-card ${route.colorClass}`;
+            busIcon.className = `bus-icon ${route.colorClass}`;
+            busIcon.innerHTML = route.busIcon;
+            document.getElementById('routeTitle').innerHTML = `Parcours (${STOPS.length} arrêts)`;
+        }
 
         function updateBusPosition() {
             if (currentStopIndex < 0) return;
@@ -479,15 +626,54 @@
             const container = document.getElementById('stopsContainer');
             container.innerHTML = '';
             
-            STOPS.forEach((stop, idx) => {
+            let displayStops;
+            if (selectedRoute === 'charisma') {
+                displayStops = STOPS;
+            } else {
+                displayStops = [STOPS[0], STOPS[8], STOPS[16]];
+            }
+            
+            displayStops.forEach((stop, idx) => {
+                let actualIdx;
+                if (selectedRoute === 'charisma') {
+                    actualIdx = idx;
+                } else {
+                    actualIdx = idx === 0 ? 0 : idx === 1 ? 8 : 16;
+                }
                 const div = document.createElement('div');
                 div.className = 'stop-point';
-                if (idx < currentStopIndex) div.classList.add('completed');
-                if (idx === currentStopIndex) div.classList.add('active');
+                if (actualIdx < currentStopIndex) div.classList.add('completed');
+                if (actualIdx === currentStopIndex) div.classList.add('active');
                 div.innerHTML = `
                     <div class="stop-marker">${stop.emoji}</div>
                     <div class="stop-name">${stop.name}</div>
                     <div class="stop-time">${stop.time}</div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function renderCompactStops() {
+            const container = document.getElementById('compactStopsList');
+            container.innerHTML = '';
+            
+            STOPS.forEach((stop, idx) => {
+                const div = document.createElement('div');
+                div.className = 'compact-stop';
+                if (idx < currentStopIndex) div.classList.add('completed');
+                if (idx === currentStopIndex) div.classList.add('active');
+                
+                let badgeText = 'À venir';
+                if (idx < currentStopIndex) badgeText = 'Effectué';
+                if (idx === currentStopIndex) badgeText = 'En cours';
+                
+                div.innerHTML = `
+                    <div class="compact-number">${String(idx + 1).padStart(2, '0')}</div>
+                    <div class="compact-info">
+                        <div class="compact-name">${stop.name}</div>
+                        <div class="compact-time">${stop.time}</div>
+                    </div>
+                    <div class="compact-badge">${badgeText}</div>
                 `;
                 container.appendChild(div);
             });
@@ -512,13 +698,13 @@
                 document.getElementById('currentTime').innerHTML = time;
 
                 renderStops();
+                renderCompactStops();
                 updateBusPosition();
 
-                // Mettre à jour le prochain arrêt
                 const nextStop = STOPS[stopIndex + 1];
                 if (nextStop) {
                     document.getElementById('nextStopName').innerHTML = nextStop.name;
-                    document.getElementById('nextStopTime').innerHTML = nextStop.time === 'Arrêt 1' || nextStop.time === 'Arrêt 2' ? 'Prochain arrêt' : `Prévu vers ${nextStop.time}`;
+                    document.getElementById('nextStopTime').innerHTML = `Prévu vers ${nextStop.time}`;
                 } else {
                     document.getElementById('nextStopName').innerHTML = 'Arrivée';
                     document.getElementById('nextStopTime').innerHTML = 'Destination atteinte';
@@ -540,7 +726,6 @@
             }
         }
 
-        // Redimensionnement pour recalculer la position du bus
         window.addEventListener('resize', () => updateBusPosition());
 
         database.ref('bus-status').on('value', (snapshot) => {
@@ -554,7 +739,9 @@
             }
         }, 1000);
 
+        applyRouteStyles();
         renderStops();
+        renderCompactStops();
     </script>
 </body>
 </html>
