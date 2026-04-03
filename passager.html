@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Suivi bus • Église Charisma</title>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: linear-gradient(135deg, #f8fafc 0%, #eef2f6 100%);
+            font-family: 'Inter', system-ui, sans-serif;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container { max-width: 550px; margin: 0 auto; }
+        .logo-container { text-align: center; margin-bottom: 24px; }
+        .logo { font-size: 2rem; font-weight: 800; letter-spacing: -0.5px; }
+        .logo span:first-child { color: #1e3c72; }
+        .logo span:last-child { color: #f97316; }
+        .logo-sub { font-size: 0.7rem; color: #64748b; margin-top: 4px; }
+        .header {
+            background: linear-gradient(135deg, #1e3c72, #2c5a8c);
+            border-radius: 28px;
+            padding: 24px;
+            text-align: center;
+            color: white;
+            margin-bottom: 20px;
+        }
+        .waiting-state {
+            background: white;
+            border-radius: 28px;
+            padding: 50px 28px;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+        }
+        .waiting-icon { font-size: 3rem; margin-bottom: 16px; }
+        .waiting-title { font-size: 1.2rem; font-weight: 700; color: #1e3c72; margin-bottom: 8px; }
+        .status-card {
+            background: white;
+            border-radius: 24px;
+            padding: 20px;
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            border: 1px solid #e2e8f0;
+        }
+        .status-icon {
+            width: 60px; height: 60px;
+            background: linear-gradient(135deg, #f97316, #ffb347);
+            border-radius: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            color: white;
+        }
+        .status-location { font-weight: 700; font-size: 1.1rem; margin: 4px 0; }
+        .progress-bar-container {
+            background: #e2e8f0;
+            border-radius: 100px;
+            height: 8px;
+            margin: 20px 0;
+        }
+        .progress-fill {
+            background: linear-gradient(90deg, #f97316, #ffb347);
+            height: 100%;
+            border-radius: 100px;
+            width: 0%;
+            transition: width 0.3s;
+        }
+        .stops-container {
+            background: white;
+            border-radius: 24px;
+            padding: 20px;
+            border: 1px solid #e2e8f0;
+            max-height: 450px;
+            overflow-y: auto;
+        }
+        .stop-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .stop-dot {
+            width: 32px; height: 32px;
+            border-radius: 32px;
+            background: #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+        }
+        .stop-item.completed .stop-dot { background: #10b981; color: white; }
+        .stop-item.active .stop-dot { background: #f97316; color: white; }
+        .stop-name { font-weight: 600; }
+        .message-card {
+            background: #fff7ed;
+            border-radius: 16px;
+            padding: 12px;
+            margin: 16px 0;
+            border-left: 4px solid #f97316;
+        }
+        .traffic-alert {
+            background: #fef2f2;
+            border-radius: 16px;
+            padding: 12px;
+            margin: 16px 0;
+            border-left: 4px solid #ef4444;
+        }
+        .culte-banner {
+            background: linear-gradient(135deg, #f97316, #ffb347);
+            border-radius: 28px;
+            padding: 16px;
+            text-align: center;
+            margin: 20px 0;
+            color: white;
+            font-weight: 700;
+        }
+        .footer { text-align: center; font-size: 0.7rem; color: #94a3b8; margin-top: 24px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo-container">
+            <div class="logo"><span>NAVI</span><span>EO</span></div>
+            <div class="logo-sub">SUIVI EN TEMPS RÉEL</div>
+        </div>
+
+        <div class="header">
+            <div id="busName">Bus Charisma</div>
+            <div id="busDesc" style="font-size: 0.8rem; opacity: 0.9;">Suivi en direct</div>
+        </div>
+
+        <div id="waitingState" class="waiting-state">
+            <div class="waiting-icon">⏳</div>
+            <div class="waiting-title">En attente du départ</div>
+            <div style="color: #64748b;">Le bus n'a pas encore commencé son trajet</div>
+        </div>
+
+        <div id="mainContent" style="display: none;">
+            <div id="messageCard" class="message-card" style="display: none;"></div>
+            <div id="trafficAlert" class="traffic-alert" style="display: none;"></div>
+            
+            <div class="status-card">
+                <div class="status-icon" id="statusIcon">🚌</div>
+                <div><div style="font-size: 0.7rem; color:#64748b;">POSITION ACTUELLE</div>
+                <div class="status-location" id="currentLocation">-</div>
+                <div id="currentTime" style="font-size: 0.8rem; color:#f97316;"></div></div>
+            </div>
+
+            <div class="progress-bar-container"><div class="progress-fill" id="progressBar"></div></div>
+
+            <div class="stops-container">
+                <div style="font-weight: 600; margin-bottom: 12px;">📍 PARCOURS</div>
+                <div id="stopsList"></div>
+            </div>
+
+            <div class="culte-banner">🎉 BON CULTE ! 🎉</div>
+        </div>
+
+        <div class="footer">Service Navettes Église Charisma • Suivi en direct</div>
+    </div>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyC4sWMc3fNaMpZ9cD8ahQdMJn6BjRyJDzk",
+            authDomain: "charisma-bus.firebaseapp.com",
+            databaseURL: "https://charisma-bus-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "charisma-bus",
+            storageBucket: "charisma-bus.firebasestorage.app",
+            messagingSenderId: "630450080183",
+            appId: "1:630450080183:web:c204b463f63b12a8d30032"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        const urlParams = new URLSearchParams(window.location.search);
+        let selectedRoute = urlParams.get('route') || 'charisma';
+
+        const STOPS = {
+            charisma: [
+                { id: "depart", name: "Départ Église", emoji: "⛪" },
+                { id: "brement", name: "Brement", emoji: "🏠" },
+                { id: "noisy", name: "Noisy-le-Sec", emoji: "🚉" },
+                { id: "retour", name: "Retour Église", emoji: "⛪" }
+            ],
+            navieo: [
+                { id: "chelles", name: "Chelles ZAC Tuilerie", emoji: "🏭" },
+                { id: "mairie", name: "Mairie", emoji: "🏛️" },
+                { id: "gare", name: "Gare", emoji: "🚉" },
+                { id: "neuilly", name: "Neuilly/Marne", emoji: "🌊" },
+                { id: "lamare", name: "La Mare", emoji: "🌾" },
+                { id: "gagnyarena", name: "Gagny Arena", emoji: "🏟️" },
+                { id: "jeanmoulin", name: "Jean Moulin", emoji: "👤" },
+                { id: "henribarbusse", name: "Henri Barbusse", emoji: "📚" },
+                { id: "garegagny", name: "Gare de Gagny", emoji: "🚉" },
+                { id: "chateau", name: "Château de Villemomble", emoji: "🏰" },
+                { id: "rosny", name: "Rosny Perrier Sud", emoji: "🌹" },
+                { id: "van", name: "Van derheyden", emoji: "🏠" },
+                { id: "ruffins", name: "Montreuil Ruffins", emoji: "🏘️" },
+                { id: "mairiemontreuil", name: "Montreuil Mairie", emoji: "🏛️" },
+                { id: "croixchavaux", name: "Croix de Chavaux", emoji: "✝️" },
+                { id: "gaulle", name: "Général de Gaulle", emoji: "👨‍✈️" },
+                { id: "eglise", name: "Église CHARISMA", emoji: "⛪" }
+            ]
+        };
+
+        let currentStopIndex = -1;
+
+        function renderStops() {
+            const container = document.getElementById('stopsList');
+            container.innerHTML = '';
+            STOPS[selectedRoute].forEach((stop, idx) => {
+                const div = document.createElement('div');
+                div.className = 'stop-item';
+                if (idx < currentStopIndex) div.classList.add('completed');
+                if (idx === currentStopIndex) div.classList.add('active');
+                div.innerHTML = `<div class="stop-dot">${stop.emoji}</div><div><div class="stop-name">${stop.name}</div></div>`;
+                container.appendChild(div);
+            });
+        }
+
+        function updateProgress() {
+            if (currentStopIndex >= 0) {
+                const progress = (currentStopIndex / (STOPS[selectedRoute].length - 1)) * 100;
+                document.getElementById('progressBar').style.width = `${progress}%`;
+            }
+        }
+
+        function updateDisplay(data) {
+            if (!data) return;
+            
+            const stopId = data.etape;
+            const time = data.time || new Date().toLocaleTimeString();
+            
+            if (currentStopIndex === -1 && stopId) {
+                document.getElementById('waitingState').style.display = 'none';
+                document.getElementById('mainContent').style.display = 'block';
+                document.getElementById('busName').innerHTML = selectedRoute === 'charisma' ? 'Bus Charisma' : 'Navieo';
+                document.getElementById('busDesc').innerHTML = selectedRoute === 'charisma' ? 'Ligne express • Suivi en direct' : 'Navette complète • 17 arrêts';
+            }
+            
+            const stopIndex = STOPS[selectedRoute].findIndex(s => s.id === stopId);
+            if (stopIndex !== -1) {
+                currentStopIndex = stopIndex;
+                const currentStop = STOPS[selectedRoute][stopIndex];
+                document.getElementById('statusIcon').innerHTML = currentStop.emoji;
+                document.getElementById('currentLocation').innerHTML = currentStop.name;
+                document.getElementById('currentTime').innerHTML = time;
+                renderStops();
+                updateProgress();
+            }
+            
+            if (data.message && data.message.text) {
+                const msgDiv = document.getElementById('messageCard');
+                msgDiv.innerHTML = `💬 ${data.message.text}<br><small style="color:#64748b;">${data.message.time}</small>`;
+                msgDiv.style.display = 'block';
+                setTimeout(() => msgDiv.style.display = 'none', 8000);
+            }
+            
+            if (data.trafficAlert) {
+                const alertDiv = document.getElementById('trafficAlert');
+                alertDiv.innerHTML = `⚠️ ${data.trafficAlert.message}<br><small>${data.trafficAlert.time}</small>`;
+                alertDiv.style.display = 'block';
+                setTimeout(() => alertDiv.style.display = 'none', 8000);
+            }
+        }
+
+        database.ref('bus-status').on('value', (snapshot) => {
+            const data = snapshot.val();
+            if (data) updateDisplay(data);
+        });
+
+        setInterval(() => {
+            if (document.getElementById('mainContent').style.display === 'block') {
+                document.getElementById('currentTime').innerHTML = new Date().toLocaleTimeString();
+            }
+        }, 1000);
+        
+        renderStops();
+    </script>
+</body>
+</html>

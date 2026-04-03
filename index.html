@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Bus Charisma • Application Navettes</title>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: linear-gradient(135deg, #f5f7fc 0%, #eef2f8 100%);
+            font-family: 'Inter', system-ui, sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 500px; margin: 0 auto; }
+        .logo-container { text-align: center; margin: 40px 0 30px; }
+        .logo { font-size: 2.5rem; font-weight: 800; letter-spacing: -1px; }
+        .logo span:first-child { color: #1e3c72; }
+        .logo span:last-child { color: #f97316; }
+        .logo-sub { font-size: 0.75rem; color: #64748b; margin-top: 8px; }
+        .role-card {
+            background: white;
+            border-radius: 32px;
+            padding: 28px;
+            margin-bottom: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        .role-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
+        .role-card.selected { border-color: #f97316; background: #fff5e8; }
+        .role-icon { font-size: 3rem; margin-bottom: 16px; }
+        .role-title { font-size: 1.3rem; font-weight: 700; color: #1e3c72; margin-bottom: 8px; }
+        .role-desc { font-size: 0.85rem; color: #64748b; }
+        .btn-primary {
+            width: 100%;
+            background: linear-gradient(135deg, #f97316, #ffb347);
+            border: none;
+            padding: 16px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1rem;
+            color: white;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+        .footer { text-align: center; font-size: 0.7rem; color: #94a3b8; margin-top: 40px; padding-top: 20px; border-top: 1px solid #e2e8f0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo-container">
+            <div class="logo"><span>NAVI</span><span>EO</span></div>
+            <div class="logo-sub">LA NAVETTE QUI TRANSPORTE LA VIE</div>
+        </div>
+
+        <div class="role-card" id="roleEquipage" onclick="selectRole('equipage')">
+            <div class="role-icon">🚌👥</div>
+            <div class="role-title">Conducteur / Accompagnateur</div>
+            <div class="role-desc">Gérez le trajet, comptez les passagers et partagez le lien</div>
+        </div>
+
+        <div class="role-card" id="roleControleur" onclick="selectRole('controleur')">
+            <div class="role-icon">📊</div>
+            <div class="role-title">Contrôleur</div>
+            <div class="role-desc">Supervisez la flotte, gérez les équipages et le planning</div>
+        </div>
+
+        <button id="startBtn" class="btn-primary" onclick="startSession()" disabled>Commencer la session</button>
+
+        <div class="footer">Application de gestion des navettes • Église Charisma</div>
+    </div>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyC4sWMc3fNaMpZ9cD8ahQdMJn6BjRyJDzk",
+            authDomain: "charisma-bus.firebaseapp.com",
+            databaseURL: "https://charisma-bus-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "charisma-bus",
+            storageBucket: "charisma-bus.firebasestorage.app",
+            messagingSenderId: "630450080183",
+            appId: "1:630450080183:web:c204b463f63b12a8d30032"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        let selectedRole = null;
+
+        function selectRole(role) {
+            selectedRole = role;
+            document.querySelectorAll('.role-card').forEach(c => c.classList.remove('selected'));
+            document.getElementById(`role${role.charAt(0).toUpperCase() + role.slice(1)}`).classList.add('selected');
+            document.getElementById('startBtn').disabled = false;
+        }
+
+        function startSession() {
+            if (!selectedRole) return;
+            
+            if (selectedRole === 'controleur') {
+                const password = prompt("🔐 Accès contrôleur - Mot de passe:");
+                if (password === "Charisma2026") {
+                    window.location.href = 'controleur.html';
+                } else if (password !== null) {
+                    alert("Mot de passe incorrect");
+                }
+            } else if (selectedRole === 'equipage') {
+                window.location.href = 'equipage.html';
+            }
+        }
+    </script>
+</body>
+</html>

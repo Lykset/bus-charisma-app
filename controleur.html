@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Contrôleur • Supervision Bus Charisma</title>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #f5f7fb;
+            font-family: 'Inter', system-ui, sans-serif;
+            padding: 20px;
+        }
+        .container { max-width: 1400px; margin: 0 auto; }
+        .logo { text-align: center; margin-bottom: 20px; font-size: 1.8rem; font-weight: 800; }
+        .logo span:first-child { color: #1e3c72; }
+        .logo span:last-child { color: #f97316; }
+        
+        .login-card {
+            max-width: 400px;
+            margin: 100px auto;
+            background: white;
+            border-radius: 32px;
+            padding: 32px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .login-card input {
+            width: 100%;
+            padding: 14px;
+            margin: 16px 0;
+            border: 1px solid #e2e8f0;
+            border-radius: 50px;
+            font-family: inherit;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #f97316, #ffb347);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            width: 100%;
+        }
+        
+        .dashboard { display: none; }
+        .header {
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            color: white;
+            padding: 20px 24px;
+            border-radius: 24px;
+            margin-bottom: 24px;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        @media (max-width: 800px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+        .stat-card {
+            background: white;
+            border-radius: 20px;
+            padding: 18px;
+            border: 1px solid #e2e8f0;
+        }
+        .stat-value { font-size: 1.8rem; font-weight: 700; color: #1e3c72; margin-top: 8px; }
+        .buses-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+        @media (max-width: 800px) { .buses-grid { grid-template-columns: 1fr; } }
+        .bus-card {
+            background: white;
+            border-radius: 24px;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+        }
+        .bus-header {
+            padding: 16px 20px;
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+        }
+        .bus-status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+        }
+        .status-active { background: #dcfce7; color: #166534; }
+        .status-inactive { background: #f1f5f9; color: #475569; }
+        .bus-content { padding: 16px 20px; }
+        .info-line {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f2f5;
+        }
+        .progress-bar { background: #e2e8f0; border-radius: 100px; height: 6px; margin: 12px 0; }
+        .progress-fill { background: #f97316; height: 100%; border-radius: 100px; width: 0%; }
+        .section-card {
+            background: white;
+            border-radius: 24px;
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+            margin-top: 24px;
+        }
+        .section-header {
+            padding: 16px 20px;
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .data-table th, .data-table td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid #f0f2f5;
+            font-size: 0.85rem;
+        }
+        .btn-icon {
+            background: #f97316;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 0.75rem;
+        }
+        .footer { text-align: center; font-size: 0.7rem; color: #64748b; margin-top: 32px; padding: 20px; }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: white;
+            border-radius: 28px;
+            padding: 28px;
+            max-width: 450px;
+            width: 90%;
+        }
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; font-size: 0.75rem; font-weight: 500; margin-bottom: 6px; }
+        .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid #e2e8f0; border-radius: 12px; }
+        .btn-outline { background: #f1f5f9; border: none; padding: 10px 20px; border-radius: 30px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo"><span>NAVI</span><span>EO</span></div>
+        
+        <div id="loginScreen" class="login-card">
+            <h2 style="margin-bottom: 16px;">🔐 Accès Contrôleur</h2>
+            <p style="color: #64748b; margin-bottom: 16px;">Espace réservé aux responsables</p>
+            <input type="password" id="passwordInput" placeholder="Mot de passe" onkeypress="if(event.key==='Enter') checkPassword()">
+            <button class="btn-primary" onclick="checkPassword()">Se connecter</button>
+            <p style="margin-top: 16px; font-size: 0.7rem; color: #94a3b8;">Mot de passe: <strong>Charisma2026</strong></p>
+        </div>
+
+        <div id="dashboard" class="dashboard">
+            <div class="header">
+                <h1>Supervision Navettes</h1>
+                <p>Gestion de flotte • Suivi en temps réel • Rapports</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card"><div style="color:#64748b;">Total passagers</div><div class="stat-value" id="totalPassengers">0</div></div>
+                <div class="stat-card"><div style="color:#64748b;">Trajets aujourd'hui</div><div class="stat-value" id="todayTrips">0</div></div>
+                <div class="stat-card"><div style="color:#64748b;">Chauffeurs</div><div class="stat-value" id="totalDrivers">0</div></div>
+                <div class="stat-card"><div style="color:#64748b;">Accompagnateurs</div><div class="stat-value" id="totalAccompanists">0</div></div>
+            </div>
+
+            <div class="buses-grid">
+                <div class="bus-card">
+                    <div class="bus-header"><div><strong>Bus Charisma</strong></div><div class="bus-status status-inactive" id="charismaStatus">Inactif</div></div>
+                    <div class="bus-content">
+                        <div class="info-line"><span>Position</span><strong id="charismaLocation">-</strong></div>
+                        <div class="progress-bar"><div class="progress-fill" id="charismaProgress"></div></div>
+                        <div class="info-line"><span>Passagers</span><span id="charismaPassengers">0</span></div>
+                    </div>
+                </div>
+                <div class="bus-card">
+                    <div class="bus-header"><div><strong>Navieo</strong></div><div class="bus-status status-inactive" id="navieoStatus">Inactif</div></div>
+                    <div class="bus-content">
+                        <div class="info-line"><span>Position</span><strong id="navieoLocation">-</strong></div>
+                        <div class="progress-bar"><div class="progress-fill" id="navieoProgress"></div></div>
+                        <div class="info-line"><span>Passagers</span><span id="navieoPassengers">0</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-card">
+                <div class="section-header"><h3>📅 Missions du jour</h3><button class="btn-icon" onclick="openMissionModal()">+ Nouvelle mission</button></div>
+                <div style="overflow-x: auto;"><table class="data-table"><thead><tr><th>Ligne</th><th>Chauffeur</th><th>Accompagnateur</th><th>Départ</th><th>Actions</th></tr></thead><tbody id="missionsList"></tbody></table></div>
+            </div>
+
+            <div class="footer">Supervision en temps réel • Dernière mise à jour: <span id="lastUpdate"></span></div>
+        </div>
+    </div>
+
+    <div id="missionModal" class="modal"><div class="modal-content"><h3>Nouvelle mission</h3>
+        <div class="form-group"><label>Date</label><input type="date" id="missionDate"></div>
+        <div class="form-group"><label>Ligne</label><select id="missionLine"><option value="charisma">Bus Charisma</option><option value="navieo">Navieo</option></select></div>
+        <div class="form-group"><label>Chauffeur</label><select id="missionDriver"></select></div>
+        <div class="form-group"><label>Accompagnateur</label><select id="missionAccompanist"></select></div>
+        <div class="form-group"><label>Départ</label><input type="time" id="missionTime" value="07:30"></div>
+        <div style="display:flex; gap:12px; margin-top:20px;"><button class="btn-outline" onclick="closeModal('missionModal')">Annuler</button><button class="btn-icon" onclick="saveMission()">Enregistrer</button></div>
+    </div></div>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyC4sWMc3fNaMpZ9cD8ahQdMJn6BjRyJDzk",
+            authDomain: "charisma-bus.firebaseapp.com",
+            databaseURL: "https://charisma-bus-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "charisma-bus",
+            storageBucket: "charisma-bus.firebasestorage.app",
+            messagingSenderId: "630450080183",
+            appId: "1:630450080183:web:c204b463f63b12a8d30032"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        let drivers = [], accompanists = [], missions = [], passengersData = {};
+        let busStatus = { charisma: null, navieo: null };
+
+        function checkPassword() {
+            const pwd = document.getElementById('passwordInput').value;
+            if (pwd === "Charisma2026") {
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('dashboard').style.display = 'block';
+                loadData();
+            } else { alert("Mot de passe incorrect"); }
+        }
+
+        function loadData() {
+            loadDrivers(); loadAccompanists(); loadMissions(); loadPassengers(); loadBusStatus();
+            setInterval(updateTime, 1000);
+        }
+
+        function loadDrivers() {
+            database.ref('drivers').on('value', (snapshot) => {
+                const data = snapshot.val();
+                drivers = data ? Object.values(data) : [];
+                updateSelectOptions();
+                document.getElementById('totalDrivers').innerHTML = drivers.length;
+            });
+        }
+
+        function loadAccompanists() {
+            database.ref('accompanists').on('value', (snapshot) => {
+                const data = snapshot.val();
+                accompanists = data ? Object.values(data) : [];
+                updateSelectOptions();
+                document.getElementById('totalAccompanists').innerHTML = accompanists.length;
+            });
+        }
+
+        function loadMissions() {
+            database.ref('missions').on('value', (snapshot) => {
+                const data = snapshot.val();
+                missions = data ? Object.values(data) : [];
+                updateMissionsList();
+                updateTodayTrips();
+            });
+        }
+
+        function loadPassengers() {
+            database.ref('passengers').on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    passengersData = data;
+                    const total = Object.values(data).reduce((a,b) => a+b, 0);
+                    document.getElementById('totalPassengers').innerHTML = total;
+                    updateBusPassengers();
+                }
+            });
+        }
+
+        function loadBusStatus() {
+            database.ref('bus-status').on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    if (data.route === 'charisma' || ['depart','brement','noisy','retour'].includes(data.etape)) {
+                        busStatus.charisma = data;
+                        updateBusCard('charisma');
+                    }
+                    if (data.route === 'navieo') {
+                        busStatus.navieo = data;
+                        updateBusCard('navieo');
+                    }
+                }
+            });
+        }
+
+        function updateBusCard(line) {
+            const status = busStatus[line];
+            const isActive = status && status.etape;
+            document.getElementById(`${line}Status`).innerHTML = isActive ? 'En service' : 'Inactif';
+            document.getElementById(`${line}Status`).className = `bus-status ${isActive ? 'status-active' : 'status-inactive'}`;
+            document.getElementById(`${line}Location`).innerHTML = status?.etape || '-';
+            const stops = line === 'charisma' ? ['depart','brement','noisy','retour'] : ['chelles','mairie','gare','neuilly','lamare','gagnyarena','jeanmoulin','henribarbusse','garegagny','chateau','rosny','van','ruffins','mairiemontreuil','croixchavaux','gaulle','eglise'];
+            const index = stops.indexOf(status?.etape);
+            if (index !== -1) { document.getElementById(`${line}Progress`).style.width = `${(index/(stops.length-1))*100}%`; }
+        }
+
+        function updateBusPassengers() {
+            let charismaTotal = 0, navieoTotal = 0;
+            ['depart','brement','noisy','retour'].forEach(s => charismaTotal += passengersData[s] || 0);
+            Object.keys(passengersData).forEach(s => { if (!['depart','brement','noisy','retour'].includes(s)) navieoTotal += passengersData[s] || 0; });
+            document.getElementById('charismaPassengers').innerHTML = charismaTotal;
+            document.getElementById('navieoPassengers').innerHTML = navieoTotal;
+        }
+
+        function updateMissionsList() {
+            const tbody = document.getElementById('missionsList');
+            if (missions.length === 0) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Aucune mission planifiée</td></tr>'; return; }
+            tbody.innerHTML = missions.sort((a,b)=>a.date?.localeCompare(b.date)).map(m => `
+                <tr><td>${m.line === 'charisma' ? 'Bus Charisma' : 'Navieo'}</td><td>${m.driverName || '-'}</td><td>${m.accompanistName || '-'}</td><td>${m.startTime || '-'}</td>
+                <td><button onclick="deleteMission('${m.id}')" style="background:none; border:none; color:red; cursor:pointer;">🗑️</button></td></tr>
+            `).join('');
+        }
+
+        function updateTodayTrips() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('todayTrips').innerHTML = missions.filter(m => m.date === today).length;
+        }
+
+        function updateSelectOptions() {
+            document.getElementById('missionDriver').innerHTML = '<option value="">Sélectionner</option>' + drivers.map(d => `<option value="${d.id}">${d.prenom} ${d.nom}</option>`).join('');
+            document.getElementById('missionAccompanist').innerHTML = '<option value="">Sélectionner</option>' + accompanists.map(a => `<option value="${a.id}">${a.prenom} ${a.nom}</option>`).join('');
+        }
+
+        function saveMission() {
+            const date = document.getElementById('missionDate').value;
+            const line = document.getElementById('missionLine').value;
+            const driverId = document.getElementById('missionDriver').value;
+            const accId = document.getElementById('missionAccompanist').value;
+            if (!date) { alert('Choisissez une date'); return; }
+            const driver = drivers.find(d => d.id === driverId);
+            const acc = accompanists.find(a => a.id === accId);
+            const newMission = { id: Date.now().toString(), date, line, driverId, driverName: driver ? `${driver.prenom} ${driver.nom}` : '', accompanistId: accId, accompanistName: acc ? `${acc.prenom} ${acc.nom}` : '', startTime: document.getElementById('missionTime').value };
+            database.ref('missions/' + newMission.id).set(newMission);
+            closeModal('missionModal');
+        }
+
+        function deleteMission(id) { if (confirm('Supprimer cette mission ?')) database.ref('missions/' + id).remove(); }
+
+        function openMissionModal() { document.getElementById('missionDate').value = new Date().toISOString().split('T')[0]; document.getElementById('missionModal').style.display = 'flex'; }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+        function updateTime() { document.getElementById('lastUpdate').innerHTML = new Date().toLocaleTimeString(); }
+    </script>
+</body>
+</html>
