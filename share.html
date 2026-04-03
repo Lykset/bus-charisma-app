@@ -2,490 +2,197 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Charisma • Suivez votre bus</title>
     
-    <!-- Open Graph pour WhatsApp -->
+    <!-- Métadonnées pour WhatsApp -->
     <meta property="og:title" content="Charisma - Suivez votre bus en temps réel" />
-    <meta property="og:description" content="Le bus est en route • Cliquez pour suivre en direct" />
-    <meta property="og:image" content="https://lykset.github.io/bus-charisma-app/logo-share.png" />
+    <meta property="og:description" content="🚌 Le bus est en route • Cliquez pour suivre en direct" />
+    <meta property="og:image" content="https://lykset.github.io/bus-charisma-app/preview.png" />
     <meta property="og:url" content="https://lykset.github.io/bus-charisma-app/share.html" />
     <meta property="og:type" content="website" />
-    <meta name="twitter:card" content="summary_large_image" />
     
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Redirection automatique après 2 secondes -->
+    <meta http-equiv="refresh" content="2;url=passager.html?route=charisma">
+    
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
+        
         body {
             background: linear-gradient(135deg, #1e3c72, #2c5a8c);
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 20px;
         }
-
-        .share-card {
+        
+        .card {
             background: white;
             border-radius: 48px;
-            padding: 32px 24px;
-            max-width: 400px;
+            padding: 40px 32px;
+            text-align: center;
+            max-width: 380px;
             width: 100%;
             box-shadow: 0 30px 50px rgba(0,0,0,0.2);
-            animation: fadeInUp 0.6s ease-out;
+            animation: fadeIn 0.5s ease-out;
         }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
         }
-
+        
         .logo {
-            text-align: center;
-            margin-bottom: 24px;
+            font-size: 3rem;
+            margin-bottom: 16px;
         }
-
-        .logo-icon {
-            font-size: 2.5rem;
-            margin-bottom: 8px;
-        }
-
-        .logo-text {
-            font-size: 1.6rem;
+        
+        .title {
+            font-size: 1.5rem;
             font-weight: 800;
             background: linear-gradient(135deg, #1e3c72, #2c5a8c);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
+            margin-bottom: 8px;
         }
-
-        /* Carte des arrêts animée */
-        .route-map {
-            background: #f8fafd;
-            border-radius: 32px;
-            padding: 24px 16px;
+        
+        .subtitle {
+            color: #6c757d;
+            font-size: 0.8rem;
             margin-bottom: 24px;
-            position: relative;
         }
-
-        .route-title {
-            text-align: center;
-            font-size: 0.7rem;
-            font-weight: 600;
-            color: #6c757d;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 30px;
-        }
-
-        .animated-timeline {
-            position: relative;
-            padding: 20px 0;
-        }
-
-        .timeline-line {
-            position: absolute;
-            top: 50%;
-            left: 10%;
-            right: 10%;
-            height: 3px;
-            background: #e2e8f0;
-            transform: translateY(-50%);
-            border-radius: 3px;
-            z-index: 1;
-        }
-
-        .timeline-progress {
-            position: absolute;
-            top: 50%;
-            left: 10%;
-            height: 3px;
-            background: linear-gradient(90deg, #00a86b, #f39c12);
-            transform: translateY(-50%);
-            border-radius: 3px;
-            width: 0%;
-            transition: width 0.5s ease;
-            z-index: 2;
-        }
-
-        .stops-row {
-            display: flex;
-            justify-content: space-between;
-            position: relative;
-            z-index: 3;
-        }
-
-        .stop {
-            text-align: center;
-            flex: 1;
-        }
-
-        .stop-marker {
-            width: 40px;
-            height: 40px;
-            background: white;
-            border: 2px solid #cbd5e1;
-            border-radius: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 8px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        .stop.completed .stop-marker {
-            border-color: #00a86b;
-            background: #e8f5e9;
-        }
-
-        .stop.active .stop-marker {
-            border-color: #f39c12;
-            background: #fff3e0;
-            transform: scale(1.1);
-            box-shadow: 0 0 0 4px rgba(243,156,18,0.2);
-        }
-
-        .stop-name {
-            font-size: 0.65rem;
-            font-weight: 600;
-        }
-
-        .stop-time {
-            font-size: 0.55rem;
-            color: #6c757d;
-            margin-top: 4px;
-        }
-
-        .stop.completed .stop-name {
-            color: #00a86b;
-        }
-
-        .stop.active .stop-name {
-            color: #f39c12;
-        }
-
-        /* Bus animé */
-        .animated-bus {
-            position: absolute;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            transition: left 0.8s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-            z-index: 10;
-        }
-
-        .bus {
-            width: 44px;
-            height: 44px;
-            background: linear-gradient(135deg, #2c5a8c, #1e3c72);
-            border-radius: 44px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.3rem;
-            color: white;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            animation: bounce 0.5s ease infinite alternate;
-        }
-
-        @keyframes bounce {
-            from { transform: translateY(0); }
-            to { transform: translateY(-3px); }
-        }
-
-        /* Informations en direct */
-        .live-info {
+        
+        .route {
             background: #f8fafd;
             border-radius: 24px;
             padding: 20px;
             margin-bottom: 24px;
+        }
+        
+        .stops {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .stop {
             text-align: center;
+            flex: 1;
         }
-
-        .current-stop {
-            font-size: 0.7rem;
-            color: #6c757d;
-            text-transform: uppercase;
-        }
-
-        .current-stop-name {
-            font-size: 1.3rem;
-            font-weight: 800;
-            margin: 8px 0;
-        }
-
-        .eta {
-            display: inline-block;
-            background: #f39c12;
-            color: white;
-            padding: 6px 16px;
-            border-radius: 30px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            margin-top: 8px;
-        }
-
-        .passenger-count {
+        
+        .stop-icon {
+            width: 44px;
+            height: 44px;
+            background: white;
+            border: 2px solid #cbd5e1;
+            border-radius: 44px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            margin-top: 12px;
-            font-size: 0.8rem;
+            margin: 0 auto 8px;
+            font-size: 1.1rem;
+        }
+        
+        .stop.active .stop-icon {
+            border-color: #f39c12;
+            background: #fff3e0;
+        }
+        
+        .stop-name {
+            font-size: 0.65rem;
+            font-weight: 600;
+        }
+        
+        .info {
+            background: #f8fafd;
+            border-radius: 20px;
+            padding: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .info-label {
+            font-size: 0.7rem;
             color: #6c757d;
         }
-
-        /* Bouton */
-        .btn-follow {
+        
+        .info-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-top: 4px;
+        }
+        
+        .btn {
             background: linear-gradient(135deg, #2c5a8c, #1e3c72);
             color: white;
             border: none;
-            padding: 16px;
+            padding: 14px;
             border-radius: 60px;
-            font-weight: 700;
-            font-size: 1rem;
+            font-weight: 600;
             width: 100%;
             cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
         }
-
-        .btn-follow:active {
-            transform: scale(0.97);
-        }
-
-        .footer {
-            text-align: center;
-            font-size: 0.6rem;
+        
+        .redirect-message {
+            font-size: 0.7rem;
             color: #94a3b8;
-            margin-top: 20px;
-        }
-
-        .route-selector {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
-
-        .route-btn {
-            background: #f8fafd;
-            border: 1px solid #eef2f6;
-            padding: 8px 20px;
-            border-radius: 40px;
-            font-size: 0.75rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .route-btn.active {
-            background: #2c5a8c;
-            color: white;
-            border-color: #2c5a8c;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            margin-top: 16px;
         }
     </style>
 </head>
 <body>
-    <div class="share-card">
-        <div class="logo">
-            <div class="logo-icon">🚌</div>
-            <div class="logo-text" id="logoText">Charisma</div>
-        </div>
-
-        <div class="route-selector">
-            <div id="btnCharisma" class="route-btn active" onclick="selectRoute('charisma')">Bus Charisma</div>
-            <div id="btnNavieo" class="route-btn" onclick="selectRoute('navieo')">Navieo</div>
-        </div>
-
-        <div class="route-map">
-            <div class="route-title" id="routeTitle">Parcours</div>
-            <div class="animated-timeline" id="timelineContainer">
-                <div class="timeline-line"></div>
-                <div class="timeline-progress" id="timelineProgress"></div>
-                <div class="animated-bus" id="animatedBus">
-                    <div class="bus" id="busIcon">🚌</div>
+    <div class="card">
+        <div class="logo">🚌</div>
+        <div class="title">Charisma</div>
+        <div class="subtitle">Suivi en temps réel</div>
+        
+        <div class="route">
+            <div class="stops">
+                <div class="stop active">
+                    <div class="stop-icon">⛪</div>
+                    <div class="stop-name">Église</div>
                 </div>
-                <div class="stops-row" id="stopsRow"></div>
+                <div class="stop">
+                    <div class="stop-icon">🏠</div>
+                    <div class="stop-name">Brement</div>
+                </div>
+                <div class="stop">
+                    <div class="stop-icon">🚉</div>
+                    <div class="stop-name">Noisy</div>
+                </div>
+                <div class="stop">
+                    <div class="stop-icon">⛪</div>
+                    <div class="stop-name">Retour</div>
+                </div>
             </div>
         </div>
-
-        <div class="live-info">
-            <div class="current-stop">Position actuelle</div>
-            <div class="current-stop-name" id="currentStopName">-</div>
-            <div class="eta" id="etaText">Arrive dans quelques minutes</div>
-            <div class="passenger-count" id="passengerCount">
-                <span>👥</span> <span id="passengerNumber">0</span> <span>passagers à bord</span>
-            </div>
+        
+        <div class="info">
+            <div class="info-label">Position actuelle</div>
+            <div class="info-value">Église Charisma</div>
         </div>
-
-        <button class="btn-follow" onclick="openApp()">
-            <span>📍</span> Suivre mon bus en direct
+        
+        <button class="btn" onclick="window.location.href='passager.html?route=charisma'">
+            📍 Suivre mon bus
         </button>
-
-        <div class="footer">
-            Service navettes • Église Charisma
+        
+        <div class="redirect-message">
+            Redirection automatique dans quelques secondes...
         </div>
     </div>
-
+    
     <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyC4sWMc3fNaMpZ9cD8ahQdMJn6BjRyJDzk",
-            authDomain: "charisma-bus.firebaseapp.com",
-            databaseURL: "https://charisma-bus-default-rtdb.europe-west1.firebasedatabase.app",
-            projectId: "charisma-bus",
-            storageBucket: "charisma-bus.firebasestorage.app",
-            messagingSenderId: "630450080183",
-            appId: "1:630450080183:web:c204b463f63b12a8d30032"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
-
-        let selectedRoute = 'charisma';
-        let currentStopIndex = -1;
-        let passengersData = {};
-
-        const ROUTES = {
-            charisma: {
-                name: "Bus Charisma",
-                icon: "🚌",
-                stops: [
-                    { id: "depart", name: "Église", time: "Départ", emoji: "⛪" },
-                    { id: "brement", name: "Brement", time: "Arrêt 1", emoji: "🏠" },
-                    { id: "noisy", name: "Noisy", time: "Arrêt 2", emoji: "🚉" },
-                    { id: "retour", name: "Retour", time: "Arrivée", emoji: "⛪" }
-                ]
-            },
-            navieo: {
-                name: "Navieo",
-                icon: "🚐",
-                stops: [
-                    { id: "chelles", name: "Chelles", time: "07:55", emoji: "🏭" },
-                    { id: "garegagny", name: "Gare Gagny", time: "08:30", emoji: "🚉" },
-                    { id: "eglise", name: "Église", time: "09:30", emoji: "⛪" }
-                ]
-            }
-        };
-
-        function selectRoute(route) {
-            selectedRoute = route;
-            document.getElementById('btnCharisma').classList.remove('active');
-            document.getElementById('btnNavieo').classList.remove('active');
-            document.getElementById(route === 'charisma' ? 'btnCharisma' : 'btnNavieo').classList.add('active');
-            document.getElementById('logoText').innerHTML = route === 'charisma' ? 'Charisma' : 'Navieo';
-            document.getElementById('busIcon').innerHTML = ROUTES[route].icon;
-            renderStops();
-            updateBusPosition();
-        }
-
-        function renderStops() {
-            const container = document.getElementById('stopsRow');
-            container.innerHTML = '';
-            const stops = ROUTES[selectedRoute].stops;
-            stops.forEach((stop, idx) => {
-                const div = document.createElement('div');
-                div.className = 'stop';
-                if (idx < currentStopIndex) div.classList.add('completed');
-                if (idx === currentStopIndex) div.classList.add('active');
-                div.innerHTML = `
-                    <div class="stop-marker">${stop.emoji}</div>
-                    <div class="stop-name">${stop.name}</div>
-                    <div class="stop-time">${stop.time}</div>
-                `;
-                container.appendChild(div);
-            });
-        }
-
-        function updateBusPosition() {
-            if (currentStopIndex < 0) return;
-            const stops = ROUTES[selectedRoute].stops;
-            const percent = (currentStopIndex / (stops.length - 1)) * 100;
-            const container = document.querySelector('.animated-timeline');
-            if (container) {
-                const containerWidth = container.offsetWidth - 40;
-                const leftPos = (percent / 100) * containerWidth + 20;
-                const bus = document.getElementById('animatedBus');
-                if (bus) {
-                    bus.style.left = `${Math.min(Math.max(leftPos, 20), containerWidth)}px`;
-                }
-            }
-            document.getElementById('timelineProgress').style.width = `${percent}%`;
-        }
-
-        function updateUI(data) {
-            if (!data || data.route !== selectedRoute) return;
-
-            const stopId = data.etape;
-            const stops = ROUTES[selectedRoute].stops;
-            const stopIndex = stops.findIndex(s => s.id === stopId);
-            
-            if (stopIndex !== -1 && stopIndex !== currentStopIndex) {
-                currentStopIndex = stopIndex;
-                const currentStop = stops[stopIndex];
-                document.getElementById('currentStopName').innerHTML = currentStop.name;
-                
-                // Calcul de l'ETA
-                const etaMinutes = (stops.length - stopIndex - 1) * 8;
-                if (etaMinutes <= 0) {
-                    document.getElementById('etaText').innerHTML = 'Arrivée imminente';
-                } else if (etaMinutes <= 5) {
-                    document.getElementById('etaText').innerHTML = `Arrive dans ${etaMinutes} minutes`;
-                } else {
-                    document.getElementById('etaText').innerHTML = `Arrive dans environ ${etaMinutes} minutes`;
-                }
-                
-                renderStops();
-                updateBusPosition();
-            }
-
-            if (data.passengers) {
-                passengersData[stopId] = data.passengers;
-                const total = Object.values(passengersData).reduce((a,b) => a+b, 0);
-                document.getElementById('passengerNumber').innerHTML = total;
-            }
-        }
-
-        function openApp() {
-            window.location.href = `passager.html?route=${selectedRoute}`;
-        }
-
-        database.ref('bus-status').on('value', (snapshot) => {
-            const data = snapshot.val();
-            if (data) updateUI(data);
-        });
-
-        database.ref('passengers').on('value', (snapshot) => {
-            const data = snapshot.val();
-            if (data) {
-                passengersData = data;
-                const total = Object.values(passengersData).reduce((a,b) => a+b, 0);
-                document.getElementById('passengerNumber').innerHTML = total;
-            }
-        });
-
-        renderStops();
+        // Redirection après 2 secondes
+        setTimeout(function() {
+            window.location.href = 'passager.html?route=charisma';
+        }, 2500);
     </script>
 </body>
 </html>
