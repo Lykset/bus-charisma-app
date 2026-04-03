@@ -2,11 +2,11 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>Charisma • Suivi en temps réel</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>Charisma Mobility • Suivi en temps réel</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -15,106 +15,132 @@
         }
 
         body {
-            background: #f4f6f9;
-            font-family: 'Public Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            color: #1a1a2e;
+            background: #f5f7fb;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: #1a2c3e;
             line-height: 1.4;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* Header RATP style */
-        .header-ratp {
-            background: #003ca6;
-            color: white;
-            padding: 16px 20px;
+        /* Header */
+        .app-header {
+            background: #ffffff;
+            padding: 20px 20px 12px;
+            border-bottom: 1px solid #eef2f6;
             position: sticky;
             top: 0;
             z-index: 100;
         }
 
-        .header-ratp-content {
+        .header-content {
             max-width: 600px;
             margin: 0 auto;
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-end;
         }
 
-        .logo-ratp {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .logo-ratp .icon {
+        .service-name {
             font-size: 1.5rem;
             font-weight: 700;
-        }
-
-        .logo-ratp .text {
-            font-weight: 600;
             letter-spacing: -0.3px;
+            background: linear-gradient(135deg, #1e3c72, #2c5a8c);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
         }
 
-        .logo-ratp .small {
+        .service-badge {
+            background: #eef2f6;
+            padding: 6px 14px;
+            border-radius: 30px;
             font-size: 0.7rem;
-            opacity: 0.8;
+            font-weight: 600;
+            color: #2c5a8c;
         }
 
-        .line-badge {
-            background: #f39c12;
-            color: #1a1a2e;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 700;
-        }
-
-        /* Container principal */
+        /* Container */
         .container {
             max-width: 600px;
             margin: 0 auto;
             padding: 20px;
         }
 
-        /* Carte d'information */
-        .info-card {
-            background: white;
-            border-radius: 24px;
-            padding: 20px;
-            margin-bottom: 16px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            border: 1px solid #e9ecef;
+        /* État d'attente */
+        .waiting-card {
+            background: #ffffff;
+            border-radius: 28px;
+            padding: 48px 28px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+            border: 1px solid #eef2f6;
         }
 
-        .route-name {
-            font-size: 1.2rem;
-            font-weight: 700;
-            margin-bottom: 4px;
-        }
-
-        .route-direction {
-            font-size: 0.8rem;
-            color: #6c757d;
-            margin-bottom: 12px;
-        }
-
-        /* Statut en direct */
-        .live-status {
-            background: #e8f5e9;
-            border-radius: 16px;
-            padding: 16px;
-            margin-bottom: 20px;
+        .waiting-icon {
+            width: 80px;
+            height: 80px;
+            background: #f0f4f9;
+            border-radius: 80px;
             display: flex;
             align-items: center;
-            gap: 12px;
-            border-left: 4px solid #00a86b;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 2rem;
+        }
+
+        .waiting-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .waiting-text {
+            color: #5a6e7c;
+            font-size: 0.85rem;
+        }
+
+        /* Carte d'information trajet */
+        .trip-card {
+            background: #ffffff;
+            border-radius: 28px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.03);
+            border: 1px solid #eef2f6;
+        }
+
+        .trip-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .trip-line {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .trip-direction {
+            font-size: 0.7rem;
+            color: #5a6e7c;
+        }
+
+        .live-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: #e8f5e9;
+            padding: 6px 12px;
+            border-radius: 30px;
         }
 
         .live-dot {
-            width: 12px;
-            height: 12px;
+            width: 8px;
+            height: 8px;
             background: #00a86b;
-            border-radius: 12px;
+            border-radius: 8px;
             animation: pulse 1.5s infinite;
         }
 
@@ -124,44 +150,43 @@
         }
 
         .live-text {
+            font-size: 0.7rem;
             font-weight: 600;
-            font-size: 0.85rem;
-            color: #1a1a2e;
+            color: #00a86b;
         }
 
         /* Position actuelle */
         .position-card {
-            background: white;
-            border-radius: 20px;
-            padding: 16px;
-            margin-bottom: 16px;
+            background: #f8fafd;
+            border-radius: 24px;
+            padding: 20px;
+            margin-bottom: 20px;
             display: flex;
             align-items: center;
             gap: 16px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
-            border: 1px solid #e9ecef;
+            border: 1px solid #eef2f6;
         }
 
-        .position-icon {
-            width: 48px;
-            height: 48px;
-            background: #003ca6;
-            border-radius: 48px;
+        .position-marker {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #1e3c72, #2c5a8c);
+            border-radius: 56px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 1.3rem;
+            font-size: 1.4rem;
         }
 
-        .position-info {
+        .position-details {
             flex: 1;
         }
 
         .position-label {
-            font-size: 0.7rem;
-            color: #6c757d;
+            font-size: 0.65rem;
             text-transform: uppercase;
+            color: #5a6e7c;
             letter-spacing: 0.5px;
         }
 
@@ -177,79 +202,143 @@
             font-weight: 500;
         }
 
-        /* Barre de progression */
-        .progress-section {
-            background: white;
-            border-radius: 20px;
-            padding: 16px;
+        /* Timeline visuelle */
+        .timeline-container {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 20px;
             margin-bottom: 20px;
-            border: 1px solid #e9ecef;
+            border: 1px solid #eef2f6;
         }
 
-        .progress-label {
+        .timeline-header {
             display: flex;
             justify-content: space-between;
+            margin-bottom: 16px;
             font-size: 0.7rem;
-            color: #6c757d;
-            margin-bottom: 8px;
+            color: #5a6e7c;
         }
 
-        .progress-bar {
-            background: #e9ecef;
-            border-radius: 10px;
-            height: 6px;
-            overflow: hidden;
+        .timeline-track {
+            position: relative;
+            height: 4px;
+            background: #eef2f6;
+            border-radius: 4px;
+            margin: 20px 0;
         }
 
-        .progress-fill {
-            background: linear-gradient(90deg, #003ca6, #00a86b);
-            height: 100%;
+        .timeline-progress {
+            position: absolute;
+            height: 4px;
+            background: linear-gradient(90deg, #1e3c72, #00a86b);
+            border-radius: 4px;
             width: 0%;
-            border-radius: 10px;
             transition: width 0.5s ease;
         }
 
-        /* Liste des arrêts */
-        .stops-title {
-            font-weight: 600;
-            font-size: 0.85rem;
-            margin: 16px 0 12px;
-            color: #1a1a2e;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .stops-list {
-            background: white;
+        .timeline-marker {
+            position: absolute;
+            top: -8px;
+            width: 20px;
+            height: 20px;
+            background: #ffffff;
+            border: 3px solid #1e3c72;
             border-radius: 20px;
-            overflow: hidden;
-            border: 1px solid #e9ecef;
+            transition: left 0.5s ease;
         }
 
-        .stop-item {
+        .timeline-stops {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 24px;
+        }
+
+        .timeline-stop {
+            text-align: center;
+            flex: 1;
+        }
+
+        .timeline-stop-dot {
+            width: 8px;
+            height: 8px;
+            background: #cbd5e1;
+            border-radius: 8px;
+            margin: 0 auto 8px;
+        }
+
+        .timeline-stop.completed .timeline-stop-dot {
+            background: #00a86b;
+        }
+
+        .timeline-stop.active .timeline-stop-dot {
+            background: #f39c12;
+            width: 12px;
+            height: 12px;
+            box-shadow: 0 0 0 3px #fff3e0;
+        }
+
+        .timeline-stop-name {
+            font-size: 0.7rem;
+            font-weight: 500;
+        }
+
+        .timeline-stop-time {
+            font-size: 0.6rem;
+            color: #5a6e7c;
+            margin-top: 4px;
+        }
+
+        /* Liste des arrêts */
+        .stops-section {
+            background: #ffffff;
+            border-radius: 24px;
+            overflow: hidden;
+            border: 1px solid #eef2f6;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            padding: 16px 20px;
+            background: #f8fafd;
+            font-weight: 600;
+            font-size: 0.8rem;
+            border-bottom: 1px solid #eef2f6;
+        }
+
+        .stop-row {
             display: flex;
             align-items: center;
-            padding: 14px 16px;
+            padding: 14px 20px;
             border-bottom: 1px solid #f0f2f5;
-            gap: 12px;
+            gap: 14px;
+            transition: background 0.2s;
         }
 
-        .stop-item:last-child {
+        .stop-row:last-child {
             border-bottom: none;
         }
 
-        .stop-marker {
-            width: 32px;
-            text-align: center;
-            font-size: 0.9rem;
+        .stop-row.completed {
+            background: #fafcfd;
         }
 
-        .stop-marker.completed {
+        .stop-row.active {
+            background: #fff8f0;
+            border-left: 3px solid #f39c12;
+        }
+
+        .stop-order {
+            width: 32px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #5a6e7c;
+        }
+
+        .stop-row.completed .stop-order {
             color: #00a86b;
         }
 
-        .stop-marker.active {
+        .stop-row.active .stop-order {
             color: #f39c12;
         }
 
@@ -262,140 +351,133 @@
             font-size: 0.9rem;
         }
 
-        .stop-time {
-            font-size: 0.7rem;
-            color: #6c757d;
+        .stop-schedule {
+            font-size: 0.65rem;
+            color: #5a6e7c;
             margin-top: 2px;
         }
 
-        .stop-badge {
+        .stop-passengers {
             font-size: 0.7rem;
-            padding: 4px 8px;
+            font-weight: 600;
+            color: #2c5a8c;
+            background: #eef2f6;
+            padding: 4px 10px;
             border-radius: 20px;
-            background: #f0f2f5;
         }
 
-        .stop-badge.completed {
-            background: #e8f5e9;
-            color: #00a86b;
-        }
-
-        .stop-badge.active {
-            background: #fff3e0;
-            color: #f39c12;
-        }
-
-        /* Message d'alerte */
+        /* Alertes */
         .alert-card {
-            background: #fff3e0;
-            border-radius: 16px;
-            padding: 12px 16px;
-            margin: 16px 0;
+            background: #fff8f0;
+            border-radius: 20px;
+            padding: 14px 18px;
+            margin-bottom: 16px;
             border-left: 4px solid #f39c12;
             display: none;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .alert-icon {
+            font-size: 1.1rem;
+        }
+
+        .alert-message {
+            font-size: 0.85rem;
+            color: #9b4a0a;
+            flex: 1;
         }
 
         /* Footer */
-        .footer-ratp {
-            background: #1a1a2e;
-            color: #6c757d;
-            padding: 16px 20px;
+        .app-footer {
             text-align: center;
-            font-size: 0.7rem;
-            margin-top: 32px;
+            padding: 20px;
+            font-size: 0.65rem;
+            color: #94a3b8;
+            border-top: 1px solid #eef2f6;
+            margin-top: 20px;
         }
 
-        /* État d'attente */
-        .waiting-card {
-            background: white;
-            border-radius: 24px;
-            padding: 48px 24px;
-            text-align: center;
-            border: 1px dashed #003ca6;
-        }
-
-        .waiting-icon {
-            font-size: 3rem;
-            margin-bottom: 16px;
-        }
-
-        .waiting-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-
-        .waiting-text {
-            color: #6c757d;
-            font-size: 0.85rem;
+        /* Animation bus */
+        @keyframes busMove {
+            0% { transform: translateX(0); }
+            50% { transform: translateX(5px); }
+            100% { transform: translateX(0); }
         }
     </style>
 </head>
 <body>
-    <div class="header-ratp">
-        <div class="header-ratp-content">
-            <div class="logo-ratp">
-                <div class="icon">🚌</div>
-                <div>
-                    <div class="text">Charisma</div>
-                    <div class="small">Service navettes</div>
-                </div>
-            </div>
-            <div class="line-badge" id="lineBadge">Ligne Charisma</div>
+    <div class="app-header">
+        <div class="header-content">
+            <div class="service-name">Charisma Mobility</div>
+            <div class="service-badge" id="routeBadge">Service actif</div>
         </div>
     </div>
 
     <div class="container">
-        <!-- État d'attente -->
+        <!-- Écran d'attente -->
         <div id="waitingState" class="waiting-card">
-            <div class="waiting-icon">⏳</div>
+            <div class="waiting-icon">🚌</div>
             <div class="waiting-title">En attente du départ</div>
-            <div class="waiting-text">Le bus n'a pas encore commencé son trajet.<br>Restez connecté pour suivre en temps réel.</div>
+            <div class="waiting-text">Le service n'a pas encore débuté.<br>Restez connecté pour suivre en temps réel.</div>
         </div>
 
         <!-- Contenu principal -->
         <div id="mainContent" style="display: none;">
-            <div class="info-card">
-                <div class="route-name" id="routeName">Bus Charisma</div>
-                <div class="route-direction" id="routeDirection">Direction : Église Charisma</div>
+            <!-- Carte trajet -->
+            <div class="trip-card">
+                <div class="trip-header">
+                    <div>
+                        <div class="trip-line" id="routeName">Bus Charisma</div>
+                        <div class="trip-direction" id="routeDirection">Direction Église Charisma</div>
+                    </div>
+                    <div class="live-badge">
+                        <div class="live-dot"></div>
+                        <div class="live-text">En direct</div>
+                    </div>
+                </div>
             </div>
 
-            <div class="live-status">
-                <div class="live-dot"></div>
-                <div class="live-text">Suivi en temps réel • Mise à jour automatique</div>
+            <!-- Alerte -->
+            <div id="alertCard" class="alert-card">
+                <div class="alert-icon">⚠️</div>
+                <div class="alert-message" id="alertMessage"></div>
             </div>
 
-            <div id="alertCard" class="alert-card"></div>
-
+            <!-- Position actuelle -->
             <div class="position-card">
-                <div class="position-icon" id="positionIcon">🚌</div>
-                <div class="position-info">
+                <div class="position-marker" id="positionMarker">🚌</div>
+                <div class="position-details">
                     <div class="position-label">Position actuelle</div>
                     <div class="position-name" id="currentLocation">-</div>
                     <div class="position-time" id="currentTime">--:--</div>
                 </div>
             </div>
 
-            <div class="progress-section">
-                <div class="progress-label">
+            <!-- Timeline visuelle -->
+            <div class="timeline-container">
+                <div class="timeline-header">
                     <span>Départ</span>
                     <span id="progressPercent">0%</span>
                     <span>Arrivée</span>
                 </div>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="progressBar"></div>
+                <div class="timeline-track">
+                    <div class="timeline-progress" id="timelineProgress"></div>
+                    <div class="timeline-marker" id="timelineMarker"></div>
                 </div>
+                <div class="timeline-stops" id="timelineStops"></div>
             </div>
 
-            <div class="stops-title">
-                <span>📍</span> Parcours et horaires
+            <!-- Liste des arrêts -->
+            <div class="stops-section">
+                <div class="section-title">Parcours et horaires</div>
+                <div id="stopsList"></div>
             </div>
-            <div class="stops-list" id="stopsList"></div>
         </div>
     </div>
 
-    <div class="footer-ratp">
-        Service navettes Église Charisma • Suivi en temps réel • Informations voyageurs
+    <div class="app-footer">
+        Charisma Mobility • Service navettes • Mise à jour automatique
     </div>
 
     <script>
@@ -418,40 +500,78 @@
         const ROUTES = {
             charisma: {
                 name: "Bus Charisma",
-                direction: "Direction : Église Charisma",
+                direction: "Direction Église Charisma",
                 stops: [
-                    { id: "depart", name: "Départ Église", emoji: "⛪", time: "Départ" },
-                    { id: "brement", name: "Brement", emoji: "🏠", time: "Arrêt 1" },
-                    { id: "noisy", name: "Noisy-le-Sec", emoji: "🚉", time: "Arrêt 2" },
-                    { id: "retour", name: "Retour Église", emoji: "⛪", time: "Arrivée" }
+                    { id: "depart", name: "Départ Église", time: "Départ" },
+                    { id: "brement", name: "Brement", time: "Arrêt 1" },
+                    { id: "noisy", name: "Noisy-le-Sec", time: "Arrêt 2" },
+                    { id: "retour", name: "Retour Église", time: "Arrivée" }
                 ]
             },
             navieo: {
                 name: "Navieo",
-                direction: "Direction : Église Charisma",
+                direction: "Direction Église Charisma",
                 stops: [
-                    { id: "chelles", name: "Chelles ZAC Tuilerie", emoji: "🏭", time: "7:55" },
-                    { id: "mairie", name: "Mairie", emoji: "🏛️", time: "8:00" },
-                    { id: "gare", name: "Gare", emoji: "🚉", time: "8:03" },
-                    { id: "neuilly", name: "Neuilly/Marne", emoji: "🌊", time: "8:13" },
-                    { id: "lamare", name: "La Mare", emoji: "🌾", time: "8:19" },
-                    { id: "gagnyarena", name: "Gagny Arena", emoji: "🏟️", time: "8:21" },
-                    { id: "jeanmoulin", name: "Jean Moulin", emoji: "👤", time: "8:24" },
-                    { id: "henribarbusse", name: "Henri Barbusse", emoji: "📚", time: "8:27" },
-                    { id: "garegagny", name: "Gare de Gagny", emoji: "🚉", time: "8:30" },
-                    { id: "chateau", name: "Château de Villemomble", emoji: "🏰", time: "8:33" },
-                    { id: "rosny", name: "Rosny Perrier Sud", emoji: "🌹", time: "8:36" },
-                    { id: "van", name: "Van derheyden", emoji: "🏠", time: "8:39" },
-                    { id: "ruffins", name: "Montreuil Ruffins", emoji: "🏘️", time: "8:49" },
-                    { id: "mairiemontreuil", name: "Montreuil Mairie", emoji: "🏛️", time: "8:59" },
-                    { id: "croixchavaux", name: "Croix de Chavaux", emoji: "✝️", time: "9:05" },
-                    { id: "gaulle", name: "Général de Gaulle", emoji: "👨‍✈️", time: "9:08" },
-                    { id: "eglise", name: "Église CHARISMA", emoji: "⛪", time: "9:30" }
+                    { id: "chelles", name: "Chelles ZAC Tuilerie", time: "07:55" },
+                    { id: "mairie", name: "Mairie", time: "08:00" },
+                    { id: "gare", name: "Gare", time: "08:03" },
+                    { id: "neuilly", name: "Neuilly/Marne", time: "08:13" },
+                    { id: "lamare", name: "La Mare", time: "08:19" },
+                    { id: "gagnyarena", name: "Gagny Arena", time: "08:21" },
+                    { id: "jeanmoulin", name: "Jean Moulin", time: "08:24" },
+                    { id: "henribarbusse", name: "Henri Barbusse", time: "08:27" },
+                    { id: "garegagny", name: "Gare de Gagny", time: "08:30" },
+                    { id: "chateau", name: "Château de Villemomble", time: "08:33" },
+                    { id: "rosny", name: "Rosny Perrier Sud", time: "08:36" },
+                    { id: "van", name: "Van derheyden", time: "08:39" },
+                    { id: "ruffins", name: "Montreuil Ruffins", time: "08:49" },
+                    { id: "mairiemontreuil", name: "Montreuil Mairie", time: "08:59" },
+                    { id: "croixchavaux", name: "Croix de Chavaux", time: "09:05" },
+                    { id: "gaulle", name: "Général de Gaulle", time: "09:08" },
+                    { id: "eglise", name: "Église CHARISMA", time: "09:30" }
                 ]
             }
         };
 
         let currentStopIndex = -1;
+
+        function updateTimelineStops() {
+            const container = document.getElementById('timelineStops');
+            container.innerHTML = '';
+            const stops = ROUTES[selectedRoute].stops;
+            stops.forEach((stop, idx) => {
+                const div = document.createElement('div');
+                div.className = 'timeline-stop';
+                if (idx < currentStopIndex) div.classList.add('completed');
+                if (idx === currentStopIndex) div.classList.add('active');
+                div.innerHTML = `
+                    <div class="timeline-stop-dot"></div>
+                    <div class="timeline-stop-name">${stop.name.length > 12 ? stop.name.substring(0,10)+'...' : stop.name}</div>
+                    <div class="timeline-stop-time">${stop.time}</div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function renderStops() {
+            const container = document.getElementById('stopsList');
+            container.innerHTML = '';
+            const stops = ROUTES[selectedRoute].stops;
+            stops.forEach((stop, idx) => {
+                const div = document.createElement('div');
+                div.className = 'stop-row';
+                if (idx < currentStopIndex) div.classList.add('completed');
+                if (idx === currentStopIndex) div.classList.add('active');
+                div.innerHTML = `
+                    <div class="stop-order">${String(idx + 1).padStart(2, '0')}</div>
+                    <div class="stop-info">
+                        <div class="stop-name">${stop.name}</div>
+                        <div class="stop-schedule">${stop.time}</div>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
 
         function updateUI(data) {
             if (!data) return;
@@ -464,73 +584,41 @@
                 document.getElementById('mainContent').style.display = 'block';
                 document.getElementById('routeName').innerHTML = ROUTES[selectedRoute].name;
                 document.getElementById('routeDirection').innerHTML = ROUTES[selectedRoute].direction;
-                document.getElementById('lineBadge').innerHTML = ROUTES[selectedRoute].name;
+                document.getElementById('routeBadge').innerHTML = ROUTES[selectedRoute].name;
             }
 
             const stopIndex = ROUTES[selectedRoute].stops.findIndex(s => s.id === stopId);
             if (stopIndex !== -1) {
                 currentStopIndex = stopIndex;
                 const currentStop = ROUTES[selectedRoute].stops[stopIndex];
-                document.getElementById('positionIcon').innerHTML = currentStop.emoji;
+                document.getElementById('positionMarker').innerHTML = stopId === 'depart' || stopId === 'retour' || stopId === 'eglise' ? '⛪' : '🚌';
                 document.getElementById('currentLocation').innerHTML = currentStop.name;
                 document.getElementById('currentTime').innerHTML = time;
 
                 const progress = (stopIndex / (ROUTES[selectedRoute].stops.length - 1)) * 100;
-                document.getElementById('progressBar').style.width = `${progress}%`;
+                document.getElementById('timelineProgress').style.width = `${progress}%`;
                 document.getElementById('progressPercent').innerHTML = `${Math.round(progress)}%`;
+                
+                const markerPos = (progress / 100) * (document.querySelector('.timeline-track')?.offsetWidth - 20 || 0);
+                document.getElementById('timelineMarker').style.left = `${Math.min(progress, 98)}%`;
 
                 renderStops();
+                updateTimelineStops();
             }
 
             if (data.trafficAlert) {
                 const alertDiv = document.getElementById('alertCard');
-                alertDiv.innerHTML = `⚠️ ${data.trafficAlert.message}`;
-                alertDiv.style.display = 'block';
+                document.getElementById('alertMessage').innerHTML = data.trafficAlert.message;
+                alertDiv.style.display = 'flex';
                 setTimeout(() => alertDiv.style.display = 'none', 8000);
             }
 
             if (data.message && data.message.text) {
                 const alertDiv = document.getElementById('alertCard');
-                alertDiv.innerHTML = `💬 ${data.message.text}`;
-                alertDiv.style.display = 'block';
+                document.getElementById('alertMessage').innerHTML = data.message.text;
+                alertDiv.style.display = 'flex';
                 setTimeout(() => alertDiv.style.display = 'none', 5000);
             }
-        }
-
-        function renderStops() {
-            const container = document.getElementById('stopsList');
-            container.innerHTML = '';
-            
-            ROUTES[selectedRoute].stops.forEach((stop, idx) => {
-                const div = document.createElement('div');
-                div.className = 'stop-item';
-                
-                let markerClass = '';
-                let badgeClass = '';
-                let badgeText = '';
-                
-                if (idx < currentStopIndex) {
-                    markerClass = 'completed';
-                    badgeClass = 'completed';
-                    badgeText = '✓ Effectué';
-                } else if (idx === currentStopIndex) {
-                    markerClass = 'active';
-                    badgeClass = 'active';
-                    badgeText = '▶ En cours';
-                } else {
-                    badgeText = '⏱ À venir';
-                }
-                
-                div.innerHTML = `
-                    <div class="stop-marker ${markerClass}">${stop.emoji}</div>
-                    <div class="stop-info">
-                        <div class="stop-name">${stop.name}</div>
-                        <div class="stop-time">${stop.time}</div>
-                    </div>
-                    <div class="stop-badge ${badgeClass}">${badgeText}</div>
-                `;
-                container.appendChild(div);
-            });
         }
 
         database.ref('bus-status').on('value', (snapshot) => {
@@ -545,6 +633,7 @@
         }, 1000);
 
         renderStops();
+        updateTimelineStops();
     </script>
 </body>
 </html>

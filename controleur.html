@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>Charisma • Supervision</title>
+    <title>Charisma Fleet • Centre de régulation</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -15,20 +16,23 @@
         }
 
         body {
-            background: #f4f6f9;
-            font-family: 'Public Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            color: #1a1a2e;
+            background: #f5f7fb;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: #1a2c3e;
         }
 
         /* Header */
-        .header-ratp {
-            background: #003ca6;
-            color: white;
-            padding: 16px 24px;
+        .app-header {
+            background: #ffffff;
+            padding: 20px 24px;
+            border-bottom: 1px solid #eef2f6;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
         .header-content {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             display: flex;
             justify-content: space-between;
@@ -37,66 +41,106 @@
             gap: 16px;
         }
 
-        .logo-area {
-            display: flex;
-            align-items: center;
-            gap: 12px;
+        .header-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #1e3c72, #2c5a8c);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
         }
 
-        .logo-icon {
-            font-size: 1.5rem;
-        }
-
-        .logo-text {
+        .header-badge {
+            background: #eef2f6;
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 0.7rem;
             font-weight: 600;
         }
 
-        .logo-sub {
-            font-size: 0.7rem;
-            opacity: 0.8;
+        /* Navigation */
+        .nav-tabs {
+            display: flex;
+            gap: 8px;
+            background: #ffffff;
+            padding: 0 24px;
+            border-bottom: 1px solid #eef2f6;
         }
 
-        .badge-controleur {
-            background: #f39c12;
-            color: #1a1a2e;
-            padding: 6px 14px;
-            border-radius: 30px;
-            font-size: 0.75rem;
-            font-weight: 700;
+        .tab-btn {
+            padding: 14px 24px;
+            background: none;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            color: #5a6e7c;
+            transition: all 0.2s;
         }
 
-        /* Container */
+        .tab-btn.active {
+            color: #2c5a8c;
+            border-bottom: 2px solid #2c5a8c;
+        }
+
+        /* Dashboard */
         .dashboard {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             padding: 24px;
         }
 
-        /* Cartes KPIs */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Login */
+        .login-card {
+            max-width: 400px;
+            margin: 100px auto;
+            background: white;
+            border-radius: 28px;
+            padding: 32px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            border: 1px solid #eef2f6;
+        }
+
+        .login-card input {
+            width: 100%;
+            padding: 14px;
+            margin: 16px 0;
+            border: 1px solid #eef2f6;
+            border-radius: 50px;
+            font-family: inherit;
+        }
+
+        /* KPIs */
         .kpi-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 16px;
+            gap: 20px;
             margin-bottom: 24px;
         }
 
-        @media (max-width: 700px) {
-            .kpi-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
+        @media (max-width: 800px) {
+            .kpi-grid { grid-template-columns: repeat(2, 1fr); }
         }
 
         .kpi-card {
             background: white;
             border-radius: 20px;
             padding: 20px;
-            border: 1px solid #e9ecef;
+            border: 1px solid #eef2f6;
         }
 
         .kpi-label {
             font-size: 0.7rem;
             text-transform: uppercase;
-            color: #6c757d;
+            color: #5a6e7c;
             letter-spacing: 0.5px;
         }
 
@@ -106,7 +150,7 @@
             margin-top: 8px;
         }
 
-        /* Grille des bus */
+        /* Cartes bus */
         .buses-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -115,22 +159,20 @@
         }
 
         @media (max-width: 800px) {
-            .buses-grid {
-                grid-template-columns: 1fr;
-            }
+            .buses-grid { grid-template-columns: 1fr; }
         }
 
         .bus-card {
             background: white;
             border-radius: 24px;
             overflow: hidden;
-            border: 1px solid #e9ecef;
+            border: 1px solid #eef2f6;
         }
 
         .bus-header {
             padding: 16px 20px;
-            background: #f8f9fa;
-            border-bottom: 1px solid #e9ecef;
+            background: #f8fafd;
+            border-bottom: 1px solid #eef2f6;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -143,10 +185,10 @@
         }
 
         .bus-badge {
-            width: 40px;
-            height: 40px;
-            border-radius: 40px;
-            background: #003ca6;
+            width: 44px;
+            height: 44px;
+            border-radius: 44px;
+            background: #2c5a8c;
             color: white;
             display: flex;
             align-items: center;
@@ -171,8 +213,8 @@
         }
 
         .status-inactive {
-            background: #f8f9fa;
-            color: #6c757d;
+            background: #f8fafd;
+            color: #5a6e7c;
         }
 
         .bus-content {
@@ -182,12 +224,12 @@
         .info-line {
             display: flex;
             justify-content: space-between;
-            padding: 10px 0;
+            padding: 8px 0;
             border-bottom: 1px solid #f0f2f5;
         }
 
         .progress-bar {
-            background: #e9ecef;
+            background: #eef2f6;
             border-radius: 10px;
             height: 6px;
             margin: 12px 0;
@@ -200,19 +242,19 @@
             width: 0%;
         }
 
-        /* Section planning */
+        /* Sections */
         .section-card {
             background: white;
             border-radius: 24px;
-            border: 1px solid #e9ecef;
+            border: 1px solid #eef2f6;
             overflow: hidden;
-            margin-top: 24px;
+            margin-bottom: 24px;
         }
 
         .section-header {
             padding: 16px 20px;
-            background: #f8f9fa;
-            border-bottom: 1px solid #e9ecef;
+            background: #f8fafd;
+            border-bottom: 1px solid #eef2f6;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -228,10 +270,10 @@
         .data-table th {
             text-align: left;
             padding: 12px 16px;
-            background: #f8f9fa;
+            background: #f8fafd;
             font-weight: 600;
             font-size: 0.7rem;
-            color: #6c757d;
+            color: #5a6e7c;
         }
 
         .data-table td {
@@ -241,7 +283,7 @@
         }
 
         .btn-icon {
-            background: #003ca6;
+            background: #2c5a8c;
             color: white;
             border: none;
             padding: 8px 16px;
@@ -251,35 +293,39 @@
             cursor: pointer;
         }
 
-        .footer {
-            text-align: center;
-            padding: 20px;
-            color: #6c757d;
-            font-size: 0.7rem;
-            border-top: 1px solid #e9ecef;
-            margin-top: 32px;
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #eef2f6;
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
         }
 
-        /* Modal login */
-        .login-card {
-            max-width: 400px;
-            margin: 100px auto;
+        /* Graphiques */
+        .charts-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        @media (max-width: 700px) {
+            .charts-row { grid-template-columns: 1fr; }
+        }
+
+        .chart-card {
             background: white;
-            border-radius: 28px;
-            padding: 32px;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-radius: 20px;
+            padding: 20px;
+            border: 1px solid #eef2f6;
         }
 
-        .login-card input {
+        canvas {
+            max-height: 200px;
             width: 100%;
-            padding: 14px;
-            margin: 16px 0;
-            border: 1px solid #e9ecef;
-            border-radius: 50px;
-            font-family: inherit;
         }
 
+        /* Modals */
         .modal {
             display: none;
             position: fixed;
@@ -296,8 +342,8 @@
         .modal-content {
             background: white;
             border-radius: 24px;
-            padding: 24px;
-            max-width: 450px;
+            padding: 28px;
+            max-width: 500px;
             width: 90%;
         }
 
@@ -314,45 +360,57 @@
 
         .form-group input, .form-group select {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #e9ecef;
+            padding: 12px;
+            border: 1px solid #eef2f6;
             border-radius: 12px;
+            font-family: inherit;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #94a3b8;
+            font-size: 0.7rem;
+            border-top: 1px solid #eef2f6;
+            margin-top: 32px;
         }
     </style>
 </head>
 <body>
-    <div class="header-ratp">
+    <div class="app-header">
         <div class="header-content">
-            <div class="logo-area">
-                <div class="logo-icon">📊</div>
-                <div>
-                    <div class="logo-text">Supervision Charisma</div>
-                    <div class="logo-sub">Centre de régulation</div>
-                </div>
-            </div>
-            <div class="badge-controleur">Espace contrôleur</div>
+            <div class="header-title">Centre de régulation Charisma</div>
+            <div class="header-badge">Supervision flotte</div>
         </div>
+    </div>
+
+    <div class="nav-tabs">
+        <button class="tab-btn active" onclick="switchTab('dashboard')">Tableau de bord</button>
+        <button class="tab-btn" onclick="switchTab('planning')">Planning</button>
+        <button class="tab-btn" onclick="switchTab('fleet')">Flotte & équipages</button>
+        <button class="tab-btn" onclick="switchTab('reports')">Rapports</button>
     </div>
 
     <div class="dashboard">
         <!-- Login -->
         <div id="loginScreen" class="login-card">
-            <h2 style="margin-bottom: 16px;">🔐 Accès régulation</h2>
-            <p style="color: #6c757d; margin-bottom: 16px;">Espace réservé au centre de supervision</p>
+            <h2 style="margin-bottom: 16px;">Accès régulation</h2>
+            <p style="color: #5a6e7c; margin-bottom: 16px;">Espace réservé au centre de supervision</p>
             <input type="password" id="passwordInput" placeholder="Mot de passe" onkeypress="if(event.key==='Enter') checkPassword()">
             <button class="btn-icon" onclick="checkPassword()" style="width:100%;">Se connecter</button>
-            <p style="margin-top: 16px; font-size: 0.7rem; color: #6c757d;">Mot de passe: <strong>Charisma2026</strong></p>
         </div>
 
-        <!-- Dashboard -->
+        <!-- Dashboard Content -->
         <div id="dashboardContent" style="display: none;">
+            <!-- KPIs -->
             <div class="kpi-grid">
-                <div class="kpi-card"><div class="kpi-label">Total passagers</div><div class="kpi-value" id="totalPassengers">0</div></div>
-                <div class="kpi-card"><div class="kpi-label">Trajets aujourd'hui</div><div class="kpi-value" id="todayTrips">0</div></div>
-                <div class="kpi-card"><div class="kpi-label">Chauffeurs</div><div class="kpi-value" id="totalDrivers">0</div></div>
-                <div class="kpi-card"><div class="kpi-label">Accompagnateurs</div><div class="kpi-value" id="totalAccompanists">0</div></div>
+                <div class="kpi-card"><div class="kpi-label">Passagers (mois)</div><div class="kpi-value" id="totalPassengers">0</div></div>
+                <div class="kpi-card"><div class="kpi-label">Services aujourd'hui</div><div class="kpi-value" id="todayTrips">0</div></div>
+                <div class="kpi-card"><div class="kpi-label">Chauffeurs actifs</div><div class="kpi-value" id="activeDrivers">0</div></div>
+                <div class="kpi-card"><div class="kpi-label">Kilomètres parcourus</div><div class="kpi-value" id="totalKm">0</div></div>
             </div>
 
+            <!-- Bus en service -->
             <div class="buses-grid">
                 <div class="bus-card">
                     <div class="bus-header">
@@ -361,9 +419,10 @@
                     </div>
                     <div class="bus-content">
                         <div class="info-line"><span>Position</span><strong id="charismaLocation">-</strong></div>
+                        <div class="info-line"><span>Chauffeur</span><span id="charismaDriver">-</span></div>
                         <div class="progress-bar"><div class="progress-fill" id="charismaProgress"></div></div>
                         <div class="info-line"><span>Passagers</span><span id="charismaPassengers">0</span></div>
-                        <div class="info-line"><span>Dernier arrêt</span><span id="charismaLastStop">-</span></div>
+                        <div class="info-line"><span>Départ</span><span id="charismaStart">-</span></div>
                     </div>
                 </div>
                 <div class="bus-card">
@@ -373,41 +432,119 @@
                     </div>
                     <div class="bus-content">
                         <div class="info-line"><span>Position</span><strong id="navieoLocation">-</strong></div>
+                        <div class="info-line"><span>Chauffeur</span><span id="navieoDriver">-</span></div>
                         <div class="progress-bar"><div class="progress-fill" id="navieoProgress"></div></div>
                         <div class="info-line"><span>Passagers</span><span id="navieoPassengers">0</span></div>
-                        <div class="info-line"><span>Dernier arrêt</span><span id="navieoLastStop">-</span></div>
+                        <div class="info-line"><span>Départ</span><span id="navieoStart">-</span></div>
                     </div>
                 </div>
             </div>
 
+            <!-- Graphiques -->
+            <div class="charts-row">
+                <div class="chart-card"><h4 style="margin-bottom:12px;">Fréquentation par ligne</h4><canvas id="lineChart"></canvas></div>
+                <div class="chart-card"><h4 style="margin-bottom:12px;">Évolution hebdomadaire</h4><canvas id="trendChart"></canvas></div>
+            </div>
+        </div>
+
+        <!-- Planning Tab -->
+        <div id="tabPlanning" class="tab-content">
             <div class="section-card">
-                <div class="section-header"><h3>📅 Programmation des services</h3><button class="btn-icon" onclick="openMissionModal()">+ Nouveau service</button></div>
+                <div class="section-header"><h3>Programmation des services</h3><button class="btn-icon" onclick="openMissionModal()">+ Nouveau service</button></div>
                 <div style="overflow-x: auto;">
                     <table class="data-table">
-                        <thead><tr><th>Date</th><th>Ligne</th><th>Chauffeur</th><th>Accompagnateur</th><th>Départ</th><th></th></tr></thead>
+                        <thead><tr><th>Date</th><th>Ligne</th><th>Chauffeur</th><th>Accompagnateur</th><th>Départ</th><th>Statut</th><th></th></tr></thead>
                         <tbody id="missionsList"></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="section-card">
+                <div class="section-header"><h3>Calendrier mensuel</h3><button class="btn-icon" onclick="exportPlanning()">Exporter</button></div>
+                <div style="padding: 20px;" id="calendarView"></div>
+            </div>
+        </div>
+
+        <!-- Flotte Tab -->
+        <div id="tabFleet" class="tab-content">
+            <div class="section-card">
+                <div class="section-header"><h3>Chauffeurs</h3><button class="btn-icon" onclick="openDriverModal()">+ Ajouter</button></div>
+                <div style="overflow-x: auto;">
+                    <table class="data-table">
+                        <thead><tr><th>Nom</th><th>Prénom</th><th>Téléphone</th><th>Ligne</th><th>Disponibilité</th><th>Actions</th></tr></thead>
+                        <tbody id="driversList"></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="section-card">
+                <div class="section-header"><h3>Accompagnateurs</h3><button class="btn-icon" onclick="openAccompanistModal()">+ Ajouter</button></div>
+                <div style="overflow-x: auto;">
+                    <table class="data-table">
+                        <thead><tr><th>Nom</th><th>Prénom</th><th>Téléphone</th><th>Ligne</th><th>Disponibilité</th><th>Actions</th></tr></thead>
+                        <tbody id="accompanistsList"></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="section-card">
+                <div class="section-header"><h3>Véhicules</h3><button class="btn-icon" onclick="openVehicleModal()">+ Ajouter</button></div>
+                <div style="overflow-x: auto;">
+                    <table class="data-table">
+                        <thead><tr><th>Immatriculation</th><th>Modèle</th><th>Ligne</th><th>Kilométrage</th><th>Statut</th><th>Actions</th></tr></thead>
+                        <tbody id="vehiclesList"></tbody>
                     </table>
                 </div>
             </div>
         </div>
 
-        <div class="footer">Centre de supervision • Données en temps réel</div>
-    </div>
-
-    <div id="missionModal" class="modal">
-        <div class="modal-content">
-            <h3>Programmer un service</h3>
-            <div class="form-group"><label>Date</label><input type="date" id="missionDate"></div>
-            <div class="form-group"><label>Ligne</label><select id="missionLine"><option value="charisma">Bus Charisma</option><option value="navieo">Navieo</option></select></div>
-            <div class="form-group"><label>Chauffeur</label><select id="missionDriver"></select></div>
-            <div class="form-group"><label>Accompagnateur</label><select id="missionAccompanist"></select></div>
-            <div class="form-group"><label>Départ</label><input type="time" id="missionTime" value="07:30"></div>
-            <div style="display:flex; gap:12px; margin-top:20px;">
-                <button onclick="closeModal('missionModal')" style="flex:1; padding:12px; background:#f8f9fa; border:none; border-radius:50px;">Annuler</button>
-                <button onclick="saveMission()" style="flex:1; padding:12px; background:#003ca6; border:none; border-radius:50px; color:white;">Enregistrer</button>
+        <!-- Reports Tab -->
+        <div id="tabReports" class="tab-content">
+            <div class="section-card">
+                <div class="section-header"><h3>Rapports d'activité</h3><button class="btn-icon" onclick="generateReport()">Générer rapport</button></div>
+                <div style="overflow-x: auto;">
+                    <table class="data-table">
+                        <thead><tr><th>Période</th><th>Total passagers</th><th>Services effectués</th><th>Kilomètres</th><th>Actions</th></tr></thead>
+                        <tbody id="reportsList"></tbody>
+                    </table>
+                </div>
             </div>
         </div>
+
+        <div class="footer">Centre de régulation • Données en temps réel • Dernière mise à jour: <span id="lastUpdate"></span></div>
     </div>
+
+    <!-- Modals -->
+    <div id="missionModal" class="modal"><div class="modal-content"><h3>Programmer un service</h3>
+        <div class="form-group"><label>Date</label><input type="date" id="missionDate"></div>
+        <div class="form-group"><label>Ligne</label><select id="missionLine"><option value="charisma">Bus Charisma</option><option value="navieo">Navieo</option></select></div>
+        <div class="form-group"><label>Chauffeur</label><select id="missionDriver"></select></div>
+        <div class="form-group"><label>Accompagnateur</label><select id="missionAccompanist"></select></div>
+        <div class="form-group"><label>Véhicule</label><select id="missionVehicle"></select></div>
+        <div class="form-group"><label>Départ</label><input type="time" id="missionTime" value="07:30"></div>
+        <div style="display:flex; gap:12px; margin-top:20px;"><button onclick="closeModal('missionModal')" style="flex:1; padding:12px; background:#f8fafd; border:none; border-radius:50px;">Annuler</button><button onclick="saveMission()" class="btn-icon">Enregistrer</button></div>
+    </div></div>
+
+    <div id="driverModal" class="modal"><div class="modal-content"><h3>Ajouter un chauffeur</h3>
+        <div class="form-group"><input type="text" id="driverLast" placeholder="Nom"></div>
+        <div class="form-group"><input type="text" id="driverFirst" placeholder="Prénom"></div>
+        <div class="form-group"><input type="tel" id="driverPhone" placeholder="Téléphone"></div>
+        <div class="form-group"><select id="driverLine"><option value="charisma">Bus Charisma</option><option value="navieo">Navieo</option><option value="both">Les deux</option></select></div>
+        <div style="display:flex; gap:12px;"><button onclick="closeModal('driverModal')" style="flex:1; padding:12px; background:#f8fafd; border:none;">Annuler</button><button onclick="saveDriver()" class="btn-icon">Ajouter</button></div>
+    </div></div>
+
+    <div id="accompanistModal" class="modal"><div class="modal-content"><h3>Ajouter un accompagnateur</h3>
+        <div class="form-group"><input type="text" id="accLast" placeholder="Nom"></div>
+        <div class="form-group"><input type="text" id="accFirst" placeholder="Prénom"></div>
+        <div class="form-group"><input type="tel" id="accPhone" placeholder="Téléphone"></div>
+        <div class="form-group"><select id="accLine"><option value="charisma">Bus Charisma</option><option value="navieo">Navieo</option><option value="both">Les deux</option></select></div>
+        <div style="display:flex; gap:12px;"><button onclick="closeModal('accompanistModal')" style="flex:1; padding:12px; background:#f8fafd;">Annuler</button><button onclick="saveAccompanist()" class="btn-icon">Ajouter</button></div>
+    </div></div>
+
+    <div id="vehicleModal" class="modal"><div class="modal-content"><h3>Ajouter un véhicule</h3>
+        <div class="form-group"><input type="text" id="vehiclePlate" placeholder="Immatriculation"></div>
+        <div class="form-group"><input type="text" id="vehicleModel" placeholder="Modèle"></div>
+        <div class="form-group"><select id="vehicleLine"><option value="charisma">Bus Charisma</option><option value="navieo">Navieo</option></select></div>
+        <div class="form-group"><input type="number" id="vehicleKm" placeholder="Kilométrage"></div>
+        <div style="display:flex; gap:12px;"><button onclick="closeModal('vehicleModal')" style="flex:1; padding:12px; background:#f8fafd;">Annuler</button><button onclick="saveVehicle()" class="btn-icon">Ajouter</button></div>
+    </div></div>
 
     <script>
         const firebaseConfig = {
@@ -422,7 +559,8 @@
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        let drivers = [], accompanists = [], missions = [], passengersData = {};
+        let drivers = [], accompanists = [], missions = [], vehicles = [], passengersData = {};
+        let lineChart, trendChart;
 
         function checkPassword() {
             const pwd = document.getElementById('passwordInput').value;
@@ -430,19 +568,22 @@
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('dashboardContent').style.display = 'block';
                 loadData();
+                initCharts();
             } else { alert("Mot de passe incorrect"); }
         }
 
         function loadData() {
-            loadDrivers(); loadAccompanists(); loadMissions(); loadPassengers(); loadBusStatus();
+            loadDrivers(); loadAccompanists(); loadMissions(); loadPassengers(); loadVehicles(); loadBusStatus();
+            updateTime();
+            setInterval(updateTime, 1000);
         }
 
         function loadDrivers() {
             database.ref('drivers').on('value', (snapshot) => {
                 const data = snapshot.val();
                 drivers = data ? Object.values(data) : [];
+                updateDriversList();
                 updateSelectOptions();
-                document.getElementById('totalDrivers').innerHTML = drivers.length;
             });
         }
 
@@ -450,8 +591,17 @@
             database.ref('accompanists').on('value', (snapshot) => {
                 const data = snapshot.val();
                 accompanists = data ? Object.values(data) : [];
+                updateAccompanistsList();
                 updateSelectOptions();
-                document.getElementById('totalAccompanists').innerHTML = accompanists.length;
+            });
+        }
+
+        function loadVehicles() {
+            database.ref('vehicles').on('value', (snapshot) => {
+                const data = snapshot.val();
+                vehicles = data ? Object.values(data) : [];
+                updateVehiclesList();
+                updateSelectOptions();
             });
         }
 
@@ -460,6 +610,7 @@
                 const data = snapshot.val();
                 missions = data ? Object.values(data) : [];
                 updateMissionsList();
+                updateCalendar();
                 document.getElementById('todayTrips').innerHTML = missions.filter(m => m.date === new Date().toISOString().split('T')[0]).length;
             });
         }
@@ -472,6 +623,7 @@
                     const total = Object.values(data).reduce((a,b) => a+b, 0);
                     document.getElementById('totalPassengers').innerHTML = total;
                     updateBusPassengers();
+                    updateCharts();
                 }
             });
         }
@@ -484,10 +636,22 @@
                     document.getElementById(`${line}Status`).innerHTML = 'En service';
                     document.getElementById(`${line}Status`).className = 'bus-status status-active';
                     document.getElementById(`${line}Location`).innerHTML = data.etape || '-';
-                    document.getElementById(`${line}LastStop`).innerHTML = data.message || '-';
                     const stops = line === 'charisma' ? ['depart','brement','noisy','retour'] : ['chelles','mairie','gare','neuilly','lamare','gagnyarena','jeanmoulin','henribarbusse','garegagny','chateau','rosny','van','ruffins','mairiemontreuil','croixchavaux','gaulle','eglise'];
                     const index = stops.indexOf(data.etape);
                     if (index !== -1) document.getElementById(`${line}Progress`).style.width = `${(index/(stops.length-1))*100}%`;
+                    if (data.time) document.getElementById(`${line}Start`).innerHTML = data.time;
+                }
+            });
+            // Mise à jour des affectations
+            database.ref('current-route').on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (data && data.route) {
+                    const line = data.route;
+                    const todayMission = missions.find(m => m.date === new Date().toISOString().split('T')[0] && m.line === line);
+                    if (todayMission) {
+                        const driver = drivers.find(d => d.id === todayMission.driverId);
+                        document.getElementById(`${line}Driver`).innerHTML = driver ? `${driver.prenom} ${driver.nom}` : '-';
+                    }
                 }
             });
         }
@@ -500,18 +664,104 @@
             document.getElementById('navieoPassengers').innerHTML = navieoTotal;
         }
 
+        function updateDriversList() {
+            const tbody = document.getElementById('driversList');
+            if (drivers.length === 0) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Aucun chauffeur</td></tr>'; return; }
+            tbody.innerHTML = drivers.map(d => `
+                <tr><td>${d.nom || ''}</td><td>${d.prenom || ''}</td><td>${d.telephone || ''}</td>
+                <td>${d.ligne === 'charisma' ? 'Bus Charisma' : d.ligne === 'navieo' ? 'Navieo' : 'Les deux'}</td>
+                <td><span class="status-active" style="padding:2px 8px;">Disponible</span></td>
+                <td><button onclick="deleteDriver('${d.id}')" class="btn-outline">Supprimer</button></td>
+            `).join('');
+        }
+
+        function updateAccompanistsList() {
+            const tbody = document.getElementById('accompanistsList');
+            if (accompanists.length === 0) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Aucun accompagnateur</td></tr>'; return; }
+            tbody.innerHTML = accompanists.map(a => `
+                <tr><td>${a.nom || ''}</td><td>${a.prenom || ''}</td><td>${a.telephone || ''}</td>
+                <td>${a.ligne === 'charisma' ? 'Bus Charisma' : a.ligne === 'navieo' ? 'Navieo' : 'Les deux'}</td>
+                <td><span class="status-active" style="padding:2px 8px;">Disponible</span></td>
+                <td><button onclick="deleteAccompanist('${a.id}')" class="btn-outline">Supprimer</button></td>
+            `).join('');
+        }
+
+        function updateVehiclesList() {
+            const tbody = document.getElementById('vehiclesList');
+            if (vehicles.length === 0) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Aucun véhicule</td></tr>'; return; }
+            tbody.innerHTML = vehicles.map(v => `
+                <tr><td>${v.plate || ''}</td><td>${v.model || ''}</td><td>${v.line === 'charisma' ? 'Bus Charisma' : 'Navieo'}</td>
+                <td>${v.km || 0} km</td><td><span class="status-active" style="padding:2px 8px;">En service</span></td>
+                <td><button onclick="deleteVehicle('${v.id}')" class="btn-outline">Supprimer</button></td>
+            `).join('');
+        }
+
         function updateMissionsList() {
             const tbody = document.getElementById('missionsList');
-            if (missions.length === 0) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Aucun service programmé</td></tr>'; return; }
-            tbody.innerHTML = missions.sort((a,b)=>a.date?.localeCompare(b.date)).map(m => `
-                <tr><td>${m.date}</td><td>${m.line === 'charisma' ? 'Bus Charisma' : 'Navieo'}</td><td>${m.driverName || '-'}</td><td>${m.accompanistName || '-'}</td><td>${m.startTime || '-'}</td>
-                <td><button onclick="deleteMission('${m.id}')" style="background:none; border:none; color:red; cursor:pointer;">🗑️</button></td></tr>
-            `).join('');
+            if (missions.length === 0) { tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Aucun service programmé</td></tr>'; return; }
+            tbody.innerHTML = missions.sort((a,b)=>a.date?.localeCompare(b.date)).map(m => {
+                const isToday = m.date === new Date().toISOString().split('T')[0];
+                return `
+                    <tr><td>${m.date}</td><td>${m.line === 'charisma' ? 'Bus Charisma' : 'Navieo'}</td>
+                    <td>${m.driverName || '-'}</td><td>${m.accompanistName || '-'}</td>
+                    <td>${m.startTime || '-'}</td>
+                    <td>${isToday ? '<span class="status-active">Aujourd\'hui</span>' : 'Programmé'}</td>
+                    <td><button onclick="deleteMission('${m.id}')" class="btn-outline">Supprimer</button></td>
+                `;
+            }).join('');
+        }
+
+        function updateCalendar() {
+            const container = document.getElementById('calendarView');
+            const months = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
+            const now = new Date();
+            const currentMonth = now.getMonth();
+            const currentYear = now.getFullYear();
+            
+            let html = `<div style="display:grid; grid-template-columns:repeat(7,1fr); gap:8px; text-align:center;">`;
+            html += `<div style="font-weight:600;">Lun</div><div style="font-weight:600;">Mar</div><div style="font-weight:600;">Mer</div><div style="font-weight:600;">Jeu</div><div style="font-weight:600;">Ven</div><div style="font-weight:600;">Sam</div><div style="font-weight:600;">Dim</div>`;
+            
+            const firstDay = new Date(currentYear, currentMonth, 1);
+            const startDay = firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1;
+            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+            
+            for (let i = 0; i < startDay; i++) html += `<div></div>`;
+            for (let d = 1; d <= daysInMonth; d++) {
+                const dateStr = `${currentYear}-${String(currentMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+                const hasMission = missions.some(m => m.date === dateStr);
+                html += `<div style="padding:8px; border-radius:12px; background:${hasMission ? '#e8f5e9' : '#f8fafd'};">${d}${hasMission ? ' ✓' : ''}</div>`;
+            }
+            html += `</div>`;
+            container.innerHTML = html;
         }
 
         function updateSelectOptions() {
             document.getElementById('missionDriver').innerHTML = '<option value="">Sélectionner</option>' + drivers.map(d => `<option value="${d.id}">${d.prenom} ${d.nom}</option>`).join('');
             document.getElementById('missionAccompanist').innerHTML = '<option value="">Sélectionner</option>' + accompanists.map(a => `<option value="${a.id}">${a.prenom} ${a.nom}</option>`).join('');
+            document.getElementById('missionVehicle').innerHTML = '<option value="">Sélectionner</option>' + vehicles.map(v => `<option value="${v.id}">${v.plate} - ${v.model}</option>`).join('');
+        }
+
+        function initCharts() {
+            const ctx1 = document.getElementById('lineChart').getContext('2d');
+            const ctx2 = document.getElementById('trendChart').getContext('2d');
+            lineChart = new Chart(ctx1, {
+                type: 'bar',
+                data: { labels: ['Bus Charisma', 'Navieo'], datasets: [{ label: 'Passagers', data: [0, 0], backgroundColor: ['#2c5a8c', '#00a86b'], borderRadius: 8 }] },
+                options: { responsive: true, maintainAspectRatio: true }
+            });
+            trendChart = new Chart(ctx2, {
+                type: 'line',
+                data: { labels: ['S1', 'S2', 'S3', 'S4'], datasets: [{ label: 'Passagers', data: [0, 0, 0, 0], borderColor: '#2c5a8c', tension: 0.3 }] },
+                options: { responsive: true }
+            });
+        }
+
+        function updateCharts() {
+            let charismaTotal = 0, navieoTotal = 0;
+            ['depart','brement','noisy','retour'].forEach(s => charismaTotal += passengersData[s] || 0);
+            Object.keys(passengersData).forEach(s => { if (!['depart','brement','noisy','retour'].includes(s)) navieoTotal += passengersData[s] || 0; });
+            if (lineChart) lineChart.data.datasets[0].data = [charismaTotal, navieoTotal];
+            if (lineChart) lineChart.update();
         }
 
         function saveMission() {
@@ -527,9 +777,66 @@
             closeModal('missionModal');
         }
 
+        function saveDriver() {
+            const nom = document.getElementById('driverLast').value;
+            const prenom = document.getElementById('driverFirst').value;
+            if (!nom || !prenom) { alert('Nom et prénom requis'); return; }
+            const newDriver = { id: Date.now().toString(), nom, prenom, telephone: document.getElementById('driverPhone').value, ligne: document.getElementById('driverLine').value };
+            database.ref('drivers/' + newDriver.id).set(newDriver);
+            closeModal('driverModal');
+            document.getElementById('driverLast').value = ''; document.getElementById('driverFirst').value = ''; document.getElementById('driverPhone').value = '';
+        }
+
+        function saveAccompanist() {
+            const nom = document.getElementById('accLast').value;
+            const prenom = document.getElementById('accFirst').value;
+            if (!nom || !prenom) { alert('Nom et prénom requis'); return; }
+            const newAcc = { id: Date.now().toString(), nom, prenom, telephone: document.getElementById('accPhone').value, ligne: document.getElementById('accLine').value };
+            database.ref('accompanists/' + newAcc.id).set(newAcc);
+            closeModal('accompanistModal');
+            document.getElementById('accLast').value = ''; document.getElementById('accFirst').value = ''; document.getElementById('accPhone').value = '';
+        }
+
+        function saveVehicle() {
+            const plate = document.getElementById('vehiclePlate').value;
+            const model = document.getElementById('vehicleModel').value;
+            if (!plate || !model) { alert('Immatriculation et modèle requis'); return; }
+            const newVehicle = { id: Date.now().toString(), plate, model, line: document.getElementById('vehicleLine').value, km: document.getElementById('vehicleKm').value || 0 };
+            database.ref('vehicles/' + newVehicle.id).set(newVehicle);
+            closeModal('vehicleModal');
+            document.getElementById('vehiclePlate').value = ''; document.getElementById('vehicleModel').value = ''; document.getElementById('vehicleKm').value = '';
+        }
+
+        function deleteDriver(id) { if (confirm('Supprimer ce chauffeur ?')) database.ref('drivers/' + id).remove(); }
+        function deleteAccompanist(id) { if (confirm('Supprimer cet accompagnateur ?')) database.ref('accompanists/' + id).remove(); }
+        function deleteVehicle(id) { if (confirm('Supprimer ce véhicule ?')) database.ref('vehicles/' + id).remove(); }
         function deleteMission(id) { if (confirm('Supprimer ce service ?')) database.ref('missions/' + id).remove(); }
+
+        function exportPlanning() {
+            let csv = "Date,Ligne,Chauffeur,Accompagnateur,Départ\n";
+            missions.forEach(m => { csv += `${m.date},${m.line === 'charisma' ? 'Bus Charisma' : 'Navieo'},${m.driverName || '-'},${m.accompanistName || '-'},${m.startTime || '-'}\n`; });
+            const blob = new Blob(["\uFEFF" + csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = `planning_${new Date().toISOString().split('T')[0]}.csv`; link.click(); URL.revokeObjectURL(link.href);
+        }
+
+        function generateReport() {
+            const total = Object.values(passengersData).reduce((a,b) => a+b, 0);
+            alert(`Rapport généré\nTotal passagers: ${total}\nServices: ${missions.length}\nChauffeurs: ${drivers.length}\nAccompagnateurs: ${accompanists.length}`);
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`tab${tab.charAt(0).toUpperCase() + tab.slice(1)}`).classList.add('active');
+            event.target.classList.add('active');
+        }
+
         function openMissionModal() { document.getElementById('missionDate').value = new Date().toISOString().split('T')[0]; document.getElementById('missionModal').style.display = 'flex'; }
+        function openDriverModal() { document.getElementById('driverModal').style.display = 'flex'; }
+        function openAccompanistModal() { document.getElementById('accompanistModal').style.display = 'flex'; }
+        function openVehicleModal() { document.getElementById('vehicleModal').style.display = 'flex'; }
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+        function updateTime() { document.getElementById('lastUpdate').innerHTML = new Date().toLocaleTimeString(); }
     </script>
 </body>
 </html>

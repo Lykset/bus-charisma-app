@@ -2,82 +2,318 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>Bus Charisma • Application Navettes</title>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>Charisma Mobility • Gestion de flotte</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            background: linear-gradient(135deg, #f5f7fc 0%, #eef2f8 100%);
-            font-family: 'Inter', system-ui, sans-serif;
+            background: #f5f7fb;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: #1a2c3e;
+            line-height: 1.4;
             min-height: 100vh;
-            padding: 20px;
+            -webkit-font-smoothing: antialiased;
         }
-        .container { max-width: 500px; margin: 0 auto; }
-        .logo-container { text-align: center; margin: 40px 0 30px; }
-        .logo { font-size: 2.5rem; font-weight: 800; letter-spacing: -1px; }
-        .logo span:first-child { color: #1e3c72; }
-        .logo span:last-child { color: #f97316; }
-        .logo-sub { font-size: 0.75rem; color: #64748b; margin-top: 8px; }
+
+        /* Header */
+        .app-header {
+            background: #ffffff;
+            padding: 24px 20px 16px;
+            border-bottom: 1px solid #eef2f6;
+        }
+
+        .header-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .logo-section {
+            margin-bottom: 8px;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #1e3c72, #2c5a8c);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .logo-sub {
+            font-size: 0.7rem;
+            color: #5a6e7c;
+            margin-top: 4px;
+        }
+
+        /* Container */
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 24px 20px;
+        }
+
+        /* Cartes de rôle */
         .role-card {
-            background: white;
-            border-radius: 32px;
-            padding: 28px;
+            background: #ffffff;
+            border-radius: 28px;
+            padding: 24px;
             margin-bottom: 20px;
-            text-align: center;
             cursor: pointer;
-            transition: all 0.3s;
-            border: 2px solid transparent;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: all 0.25s ease;
+            border: 1px solid #eef2f6;
+            position: relative;
+            overflow: hidden;
         }
-        .role-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
-        .role-card.selected { border-color: #f97316; background: #fff5e8; }
-        .role-icon { font-size: 3rem; margin-bottom: 16px; }
-        .role-title { font-size: 1.3rem; font-weight: 700; color: #1e3c72; margin-bottom: 8px; }
-        .role-desc { font-size: 0.85rem; color: #64748b; }
+
+        .role-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.06);
+            border-color: #cbd5e1;
+        }
+
+        .role-card.selected {
+            border-color: #2c5a8c;
+            background: linear-gradient(135deg, #f8fafd, #f0f6ff);
+        }
+
+        .role-card-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 12px;
+        }
+
+        .role-icon {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #1e3c72, #2c5a8c);
+            border-radius: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.4rem;
+        }
+
+        .role-icon.control {
+            background: linear-gradient(135deg, #2c5a8c, #1e3c72);
+        }
+
+        .role-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #1a2c3e;
+        }
+
+        .role-badge {
+            font-size: 0.65rem;
+            color: #5a6e7c;
+            margin-top: 4px;
+        }
+
+        .role-description {
+            font-size: 0.85rem;
+            color: #5a6e7c;
+            line-height: 1.5;
+            margin-left: 72px;
+        }
+
+        /* Séparateur */
+        .separator {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 24px 0 20px;
+        }
+
+        .separator-line {
+            flex: 1;
+            height: 1px;
+            background: #eef2f6;
+        }
+
+        .separator-text {
+            font-size: 0.7rem;
+            color: #5a6e7c;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Bouton principal */
         .btn-primary {
             width: 100%;
-            background: linear-gradient(135deg, #f97316, #ffb347);
+            background: linear-gradient(135deg, #2c5a8c, #1e3c72);
+            color: white;
             border: none;
             padding: 16px;
             border-radius: 50px;
-            font-weight: 700;
-            font-size: 1rem;
-            color: white;
+            font-weight: 600;
+            font-size: 0.95rem;
             cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 8px;
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-primary:active:not(:disabled) {
+            transform: scale(0.98);
+        }
+
+        /* Section informations */
+        .info-section {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 20px;
+            margin-top: 32px;
+            border: 1px solid #eef2f6;
+        }
+
+        .info-title {
+            font-weight: 600;
+            font-size: 0.8rem;
+            margin-bottom: 16px;
+            color: #1a2c3e;
+        }
+
+        .info-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.85rem;
+            color: #5a6e7c;
+        }
+
+        .info-dot {
+            width: 6px;
+            height: 6px;
+            background: #00a86b;
+            border-radius: 6px;
+        }
+
+        /* Footer */
+        .app-footer {
+            text-align: center;
+            padding: 24px 20px 32px;
+            font-size: 0.65rem;
+            color: #94a3b8;
+            border-top: 1px solid #eef2f6;
             margin-top: 20px;
         }
-        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
-        .footer { text-align: center; font-size: 0.7rem; color: #94a3b8; margin-top: 40px; padding-top: 20px; border-top: 1px solid #e2e8f0; }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .role-card {
+            animation: fadeIn 0.3s ease-out;
+        }
     </style>
 </head>
 <body>
+    <div class="app-header">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="logo">Charisma Mobility</div>
+                <div class="logo-sub">Solution de gestion de flotte</div>
+            </div>
+        </div>
+    </div>
+
     <div class="container">
-        <div class="logo-container">
-            <div class="logo"><span>NAVI</span><span>EO</span></div>
-            <div class="logo-sub">LA NAVETTE QUI TRANSPORTE LA VIE</div>
+        <!-- Carte Conducteur / Accompagnateur -->
+        <div id="roleEquipage" class="role-card" onclick="selectRole('equipage')">
+            <div class="role-card-header">
+                <div class="role-icon">🚌</div>
+                <div>
+                    <div class="role-title">Poste de conduite</div>
+                    <div class="role-badge">Conducteur & Accompagnateur</div>
+                </div>
+            </div>
+            <div class="role-description">
+                Gérez votre service, comptez les passagers, communiquez en temps réel et partagez le suivi avec les voyageurs.
+            </div>
         </div>
 
-        <div class="role-card" id="roleEquipage" onclick="selectRole('equipage')">
-            <div class="role-icon">🚌👥</div>
-            <div class="role-title">Conducteur / Accompagnateur</div>
-            <div class="role-desc">Gérez le trajet, comptez les passagers et partagez le lien</div>
+        <!-- Carte Contrôleur -->
+        <div id="roleControleur" class="role-card" onclick="selectRole('controleur')">
+            <div class="role-card-header">
+                <div class="role-icon control">📊</div>
+                <div>
+                    <div class="role-title">Centre de régulation</div>
+                    <div class="role-badge">Superviseur flotte</div>
+                </div>
+            </div>
+            <div class="role-description">
+                Accès sécurisé. Supervisez la flotte, gérez les équipages, programmez les services et consultez les rapports.
+            </div>
         </div>
 
-        <div class="role-card" id="roleControleur" onclick="selectRole('controleur')">
-            <div class="role-icon">📊</div>
-            <div class="role-title">Contrôleur</div>
-            <div class="role-desc">Supervisez la flotte, gérez les équipages et le planning</div>
+        <!-- Séparateur -->
+        <div class="separator">
+            <div class="separator-line"></div>
+            <div class="separator-text">Démarrage</div>
+            <div class="separator-line"></div>
         </div>
 
-        <button id="startBtn" class="btn-primary" onclick="startSession()" disabled>Commencer la session</button>
+        <!-- Bouton de validation -->
+        <button id="startBtn" class="btn-primary" onclick="validateSelection()" disabled>Accéder à l'espace sélectionné</button>
 
-        <div class="footer">Application de gestion des navettes • Église Charisma</div>
+        <!-- Section informations -->
+        <div class="info-section">
+            <div class="info-title">Informations service</div>
+            <div class="info-list">
+                <div class="info-item">
+                    <div class="info-dot"></div>
+                    <span>Deux lignes disponibles : Bus Charisma (express) et Navieo (complet)</span>
+                </div>
+                <div class="info-item">
+                    <div class="info-dot"></div>
+                    <span>Suivi en temps réel des navettes</span>
+                </div>
+                <div class="info-item">
+                    <div class="info-dot"></div>
+                    <span>Partage de lien WhatsApp pour les passagers</span>
+                </div>
+                <div class="info-item">
+                    <div class="info-dot"></div>
+                    <span>Rapports d'activité et statistiques</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="app-footer">
+        Charisma Mobility • Solution de mobilité • Données sécurisées
     </div>
 
     <script>
+        // Configuration Firebase (inchangée)
         const firebaseConfig = {
             apiKey: "AIzaSyC4sWMc3fNaMpZ9cD8ahQdMJn6BjRyJDzk",
             authDomain: "charisma-bus.firebaseapp.com",
@@ -87,32 +323,51 @@
             messagingSenderId: "630450080183",
             appId: "1:630450080183:web:c204b463f63b12a8d30032"
         };
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
+
+        // Initialisation uniquement si Firebase n'est pas déjà chargé
+        if (typeof firebase !== 'undefined' && !firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
 
         let selectedRole = null;
 
         function selectRole(role) {
             selectedRole = role;
-            document.querySelectorAll('.role-card').forEach(c => c.classList.remove('selected'));
+            
+            // Retirer la classe selected des deux cartes
+            document.getElementById('roleEquipage').classList.remove('selected');
+            document.getElementById('roleControleur').classList.remove('selected');
+            
+            // Ajouter la classe selected à la carte choisie
             document.getElementById(`role${role.charAt(0).toUpperCase() + role.slice(1)}`).classList.add('selected');
+            
+            // Activer le bouton
             document.getElementById('startBtn').disabled = false;
         }
 
-        function startSession() {
+        function validateSelection() {
             if (!selectedRole) return;
             
             if (selectedRole === 'controleur') {
-                const password = prompt("🔐 Accès contrôleur - Mot de passe:");
+                // Demander le mot de passe pour le contrôleur
+                const password = prompt("Accès sécurisé - Centre de régulation\n\nVeuillez saisir votre mot de passe :");
                 if (password === "Charisma2026") {
                     window.location.href = 'controleur.html';
                 } else if (password !== null) {
-                    alert("Mot de passe incorrect");
+                    alert("Mot de passe incorrect. Accès refusé.");
                 }
             } else if (selectedRole === 'equipage') {
                 window.location.href = 'equipage.html';
             }
         }
+
+        // Animation au chargement
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.role-card');
+            cards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.1}s`;
+            });
+        });
     </script>
 </body>
 </html>
