@@ -3,79 +3,289 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>Équipage • Bus Charisma</title>
+    <title>Charisma • Poste de conduite</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            background: linear-gradient(135deg, #f5f7fc 0%, #eef2f8 100%);
-            font-family: 'Inter', system-ui, sans-serif;
-            padding: 20px;
-            min-height: 100vh;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        .container { max-width: 550px; margin: 0 auto; }
-        .logo-container { text-align: center; margin-bottom: 24px; }
-        .logo { font-size: 2rem; font-weight: 800; }
-        .logo span:first-child { color: #1e3c72; }
-        .logo span:last-child { color: #f97316; }
+
+        body {
+            background: #f4f6f9;
+            font-family: 'Public Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            color: #1a1a2e;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 550px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header-ratp {
+            background: #003ca6;
+            color: white;
+            padding: 16px 20px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-ratp {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-ratp .icon {
+            font-size: 1.3rem;
+        }
+
+        .logo-ratp .text {
+            font-weight: 600;
+        }
+
+        .badge-pro {
+            background: #f39c12;
+            color: #1a1a2e;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+
+        /* Cartes */
         .card {
             background: white;
-            border-radius: 28px;
-            padding: 24px;
-            margin-bottom: 20px;
-            border: 1px solid #e2e8f0;
-        }
-        .route-selector { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
-        .route-option {
-            background: #f8fafc;
             border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            border: 1px solid #e9ecef;
+        }
+
+        .card-title {
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #1a1a2e;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Sélection ligne */
+        .route-selector {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .route-btn {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 16px;
             padding: 16px;
             text-align: center;
             cursor: pointer;
-            border: 2px solid transparent;
+            transition: all 0.2s;
         }
-        .route-option.selected { border-color: #f97316; background: #fff5e8; }
+
+        .route-btn.selected {
+            border-color: #003ca6;
+            background: #e8f0fe;
+        }
+
+        .route-icon {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+        }
+
+        .route-name {
+            font-weight: 600;
+        }
+
+        .route-stops {
+            font-size: 0.7rem;
+            color: #6c757d;
+        }
+
+        /* Boutons */
         .btn-primary {
-            background: linear-gradient(135deg, #f97316, #ffb347);
+            background: #003ca6;
+            color: white;
             border: none;
             padding: 14px;
             border-radius: 50px;
             font-weight: 600;
-            color: white;
             width: 100%;
             cursor: pointer;
+            font-size: 0.9rem;
         }
-        .status-box { background: #f8fafc; border-radius: 20px; padding: 16px; margin: 16px 0; text-align: center; }
-        .btn-group { display: flex; flex-direction: column; gap: 12px; margin: 20px 0; }
-        .btn-action {
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            padding: 12px;
+            border-radius: 50px;
+            font-weight: 500;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 12px;
+        }
+
+        /* Statut */
+        .status-box {
+            background: #f8f9fa;
+            border-radius: 16px;
             padding: 16px;
-            border: none;
+            text-align: center;
+            margin-bottom: 16px;
+            border-left: 4px solid #00a86b;
+        }
+
+        /* Boutons d'arrêt */
+        .stops-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 16px 0;
+        }
+
+        .stop-btn {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            padding: 14px;
+            border-radius: 14px;
+            text-align: left;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .stop-btn:active {
+            transform: scale(0.98);
+        }
+
+        .stop-btn.active {
+            background: #e8f0fe;
+            border-color: #003ca6;
+        }
+
+        .stop-btn.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .stop-name {
+            font-weight: 500;
+        }
+
+        .stop-time {
+            font-size: 0.7rem;
+            color: #6c757d;
+        }
+
+        .stop-status {
+            font-size: 0.7rem;
+            padding: 4px 8px;
             border-radius: 20px;
+            background: #e9ecef;
+        }
+
+        .stop-status.done {
+            background: #e8f5e9;
+            color: #00a86b;
+        }
+
+        .stop-status.current {
+            background: #fff3e0;
+            color: #f39c12;
+        }
+
+        /* Section partage */
+        .share-section {
+            background: #e8f0fe;
+            border-radius: 16px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+
+        .link-box {
+            display: flex;
+            gap: 8px;
+            margin: 12px 0;
+        }
+
+        .link-box input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #e9ecef;
+            border-radius: 12px;
+            font-family: monospace;
+            font-size: 0.8rem;
+            background: white;
+        }
+
+        .btn-whatsapp {
+            background: #25D366;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 50px;
+            width: 100%;
             font-weight: 600;
             cursor: pointer;
-            color: white;
         }
-        .btn-depart { background: #f97316; }
-        .btn-brement { background: #3b82f6; }
-        .btn-noisy { background: #8b5cf6; }
-        .btn-retour { background: #10b981; }
-        .btn-navieo { background: #1e6b5e; }
-        .btn-action:disabled { opacity: 0.5; cursor: not-allowed; }
-        .traffic-section { background: #fef9f0; border-radius: 20px; padding: 16px; margin: 20px 0; }
-        .traffic-buttons { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
-        .traffic-btn { padding: 8px 14px; background: #f97316; border: none; border-radius: 30px; color: white; cursor: pointer; font-size: 0.75rem; }
-        .custom-traffic { display: flex; gap: 8px; margin-top: 12px; }
-        .custom-traffic input { flex: 1; padding: 10px; border: 1px solid #e2e8f0; border-radius: 30px; }
-        .progress-bar { background: #e2e8f0; border-radius: 100px; height: 8px; margin: 16px 0; }
-        .progress-fill { background: #f97316; height: 100%; border-radius: 100px; width: 0%; transition: width 0.3s; }
-        .history-list { background: #f8fafc; border-radius: 20px; padding: 16px; margin-top: 20px; max-height: 200px; overflow-y: auto; }
-        .history-item { padding: 8px 0; border-bottom: 1px solid #e2e8f0; font-size: 0.8rem; }
-        .share-section { background: #f1f5f9; border-radius: 20px; padding: 16px; margin-top: 20px; }
-        .share-link { display: flex; gap: 8px; margin: 12px 0; }
-        .share-link input { flex: 1; padding: 10px; border: 1px solid #e2e8f0; border-radius: 30px; background: white; font-family: monospace; }
-        .whatsapp-btn { background: #25D366; color: white; border: none; padding: 12px; border-radius: 30px; width: 100%; font-weight: 600; cursor: pointer; }
+
+        /* Progression */
+        .progress-bar {
+            background: #e9ecef;
+            border-radius: 10px;
+            height: 6px;
+            margin: 16px 0;
+        }
+
+        .progress-fill {
+            background: #00a86b;
+            height: 100%;
+            border-radius: 10px;
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        /* Historique */
+        .history-list {
+            background: #f8f9fa;
+            border-radius: 16px;
+            padding: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            padding: 10px 0;
+            border-bottom: 1px solid #e9ecef;
+            font-size: 0.8rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -88,102 +298,134 @@
             justify-content: center;
             align-items: center;
         }
+
         .modal-content {
             background: white;
-            border-radius: 28px;
+            border-radius: 24px;
             padding: 28px;
             max-width: 350px;
             width: 90%;
             text-align: center;
         }
-        .counter { display: flex; justify-content: center; gap: 20px; margin: 20px 0; }
+
+        .counter {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
         .counter-btn {
-            width: 50px; height: 50px;
+            width: 50px;
+            height: 50px;
             border-radius: 50px;
-            background: #f97316;
+            background: #003ca6;
             border: none;
             font-size: 1.5rem;
             color: white;
             cursor: pointer;
         }
-        .footer { text-align: center; font-size: 0.7rem; color: #94a3b8; margin-top: 24px; }
+
+        .counter-value {
+            font-size: 2rem;
+            font-weight: 700;
+            min-width: 60px;
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 0.7rem;
+            color: #6c757d;
+            margin-top: 24px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="logo-container">
-            <div class="logo"><span>NAVI</span><span>EO</span></div>
-            <div style="font-size: 0.7rem; color: #64748b;">ESPACE ÉQUIPAGE (Conducteur + Accompagnateur)</div>
+        <div class="header-ratp">
+            <div class="logo-ratp">
+                <div class="icon">🚌</div>
+                <div class="text">Poste de conduite</div>
+            </div>
+            <div class="badge-pro">Équipage</div>
         </div>
 
+        <!-- Écran de sélection -->
         <div id="selectionScreen">
             <div class="card">
-                <h2 style="margin-bottom: 16px;">Sélection de la ligne</h2>
+                <div class="card-title">📋 Sélection de la ligne</div>
                 <div class="route-selector">
-                    <div id="routeCharisma" class="route-option" onclick="selectRoute('charisma')">🚌 Bus Charisma<br><span style="font-size:0.7rem;">4 arrêts</span></div>
-                    <div id="routeNavieo" class="route-option" onclick="selectRoute('navieo')">🚐 Navieo<br><span style="font-size:0.7rem;">17 arrêts</span></div>
+                    <div id="routeCharisma" class="route-btn" onclick="selectRoute('charisma')">
+                        <div class="route-icon">🚌</div>
+                        <div class="route-name">Bus Charisma</div>
+                        <div class="route-stops">4 arrêts</div>
+                    </div>
+                    <div id="routeNavieo" class="route-btn" onclick="selectRoute('navieo')">
+                        <div class="route-icon">🚐</div>
+                        <div class="route-name">Navieo</div>
+                        <div class="route-stops">17 arrêts</div>
+                    </div>
                 </div>
-                <button id="startBtn" class="btn-primary" onclick="startRoute()" disabled>Démarrer le trajet</button>
+                <button id="startBtn" class="btn-primary" onclick="startRoute()" disabled>Démarrer le service</button>
             </div>
         </div>
 
+        <!-- Interface de conduite -->
         <div id="driverInterface" style="display: none;">
             <div class="card">
-                <h3 id="routeTitle">Bus Charisma</h3>
+                <div class="card-title" id="routeTitle">🚌 Bus Charisma</div>
                 <div class="status-box" id="status">📍 Prêt à démarrer</div>
                 <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
-                <div class="btn-group" id="buttonsGroup"></div>
+                <div class="stops-buttons" id="stopsButtons"></div>
             </div>
 
             <div class="share-section">
-                <div style="font-weight: 600; margin-bottom: 8px;">🔗 Partager le lien avec les passagers</div>
-                <div class="share-link">
+                <div class="card-title">🔗 Partager le suivi</div>
+                <div class="link-box">
                     <input type="text" id="shareLink" readonly>
-                    <button onclick="copyLink()" style="background:#f97316; border:none; padding:0 16px; border-radius:30px;">Copier</button>
+                    <button onclick="copyLink()" style="background:#003ca6; color:white; border:none; padding:0 16px; border-radius:12px;">Copier</button>
                 </div>
-                <button class="whatsapp-btn" onclick="shareOnWhatsApp()">📱 Partager sur WhatsApp</button>
-                <p style="font-size:0.7rem; color:#64748b; margin-top:8px;">Envoyez ce lien dans le groupe WhatsApp pour que les passagers suivent le bus en temps réel</p>
+                <button class="btn-whatsapp" onclick="shareOnWhatsApp()">📱 Partager sur WhatsApp</button>
+                <p style="font-size:0.7rem; color:#6c757d; margin-top:8px;">Envoyez ce lien aux passagers pour le suivi en temps réel</p>
             </div>
 
-            <div class="traffic-section">
-                <div style="font-weight: 600;">💬 Messages aux passagers</div>
-                <div class="traffic-buttons">
-                    <button class="traffic-btn" onclick="sendMessage('Bonjour à tous ! Le bus démarre dans quelques minutes.')">Départ imminent</button>
-                    <button class="traffic-btn" onclick="sendMessage('Nous arrivons dans 5 minutes, préparez-vous !')">Arrivée imminente</button>
-                    <button class="traffic-btn" onclick="sendMessage('Merci pour votre accueil chaleureux !')">Merci</button>
-                    <button class="traffic-btn" onclick="sendMessage('Bon culte à tous ! 🙏')">Bon culte</button>
-                    <button class="traffic-btn" onclick="sendTraffic('Retard de 5 minutes')">+5 min</button>
-                    <button class="traffic-btn" onclick="sendTraffic('Retard de 10 minutes')">+10 min</button>
-                    <button class="traffic-btn" onclick="sendTraffic('Retard de 15 minutes')">+15 min</button>
+            <div class="card">
+                <div class="card-title">💬 Communication voyageurs</div>
+                <div class="route-selector" style="grid-template-columns: repeat(2,1fr); gap:8px;">
+                    <button class="btn-secondary" onclick="sendMessage('Départ imminent dans 5 minutes')">Départ imminent</button>
+                    <button class="btn-secondary" onclick="sendMessage('Nous arrivons dans 5 minutes')">Arrivée proche</button>
+                    <button class="btn-secondary" onclick="sendTraffic('Retard de 5 minutes')">+5 min</button>
+                    <button class="btn-secondary" onclick="sendTraffic('Retard de 10 minutes')">+10 min</button>
                 </div>
-                <div class="custom-traffic">
-                    <input type="text" id="customMsg" placeholder="Message personnalisé...">
-                    <button class="traffic-btn" onclick="sendCustomMessage()">Envoyer</button>
+                <div style="display: flex; gap: 8px; margin-top: 12px;">
+                    <input type="text" id="customMsg" placeholder="Message personnalisé..." style="flex:1; padding:12px; border:1px solid #e9ecef; border-radius:12px;">
+                    <button class="btn-secondary" onclick="sendCustomMessage()" style="width:auto; margin-top:0; padding:12px 20px;">Envoyer</button>
                 </div>
             </div>
 
-            <div class="history-list">
-                <div style="font-weight: 600; margin-bottom: 8px;">📋 Historique</div>
-                <div id="historyList"></div>
+            <div class="card">
+                <div class="card-title">📋 Historique</div>
+                <div class="history-list" id="historyList"></div>
             </div>
 
-            <button class="btn-primary" onclick="resetJourney()" style="margin-top: 16px;">⟳ Nouveau trajet</button>
+            <button class="btn-secondary" onclick="resetJourney()" style="background:#f8f9fa;">⟳ Nouveau service</button>
         </div>
 
-        <div class="footer">Équipage • Comptage des passagers • Alertes et messages</div>
+        <div class="footer">Service navettes Église Charisma • Poste de conduite sécurisé</div>
     </div>
 
+    <!-- Modal comptage -->
     <div id="passengerModal" class="modal">
         <div class="modal-content">
             <h3 id="modalTitle">Comptage des passagers</h3>
             <div class="counter">
                 <button class="counter-btn" onclick="decrementCount()">-</button>
-                <span class="counter-value" id="passengerCount" style="font-size:2rem; font-weight:700;">0</span>
+                <span class="counter-value" id="passengerCount">0</span>
                 <button class="counter-btn" onclick="incrementCount()">+</button>
             </div>
             <div style="display: flex; gap: 12px;">
-                <button onclick="closeModal()" style="flex:1; padding:12px; background:#f1f5f9; border:none; border-radius:40px;">Annuler</button>
-                <button onclick="confirmPassengers()" style="flex:1; padding:12px; background:#f97316; border:none; border-radius:40px; color:white;">Valider</button>
+                <button onclick="closeModal()" style="flex:1; padding:12px; background:#f8f9fa; border:none; border-radius:50px;">Annuler</button>
+                <button onclick="confirmPassengers()" style="flex:1; padding:12px; background:#003ca6; border:none; border-radius:50px; color:white;">Valider</button>
             </div>
         </div>
     </div>
@@ -211,29 +453,29 @@
 
         const ROUTES = {
             charisma: { stops: [
-                { id: "depart", name: "Départ Église", message: "DÉPART Église" },
-                { id: "brement", name: "Brement", message: "ARRIVÉE Brement" },
-                { id: "noisy", name: "Noisy-le-Sec", message: "ARRIVÉE Noisy" },
-                { id: "retour", name: "Retour Église", message: "RETOUR Église" }
+                { id: "depart", name: "Départ Église", time: "Départ", message: "DÉPART Église" },
+                { id: "brement", name: "Brement", time: "Arrêt 1", message: "ARRIVÉE Brement" },
+                { id: "noisy", name: "Noisy-le-Sec", time: "Arrêt 2", message: "ARRIVÉE Noisy" },
+                { id: "retour", name: "Retour Église", time: "Arrivée", message: "RETOUR Église" }
             ] },
             navieo: { stops: [
-                { id: "chelles", name: "Chelles", message: "DÉPART Chelles" },
-                { id: "mairie", name: "Mairie", message: "ARRIVÉE Mairie" },
-                { id: "gare", name: "Gare", message: "ARRIVÉE Gare" },
-                { id: "neuilly", name: "Neuilly/Marne", message: "ARRIVÉE Neuilly" },
-                { id: "lamare", name: "La Mare", message: "ARRIVÉE La Mare" },
-                { id: "gagnyarena", name: "Gagny Arena", message: "ARRIVÉE Gagny" },
-                { id: "jeanmoulin", name: "Jean Moulin", message: "ARRIVÉE Jean Moulin" },
-                { id: "henribarbusse", name: "Henri Barbusse", message: "ARRIVÉE Barbusse" },
-                { id: "garegagny", name: "Gare de Gagny", message: "ARRIVÉE Gare Gagny" },
-                { id: "chateau", name: "Château", message: "ARRIVÉE Château" },
-                { id: "rosny", name: "Rosny", message: "ARRIVÉE Rosny" },
-                { id: "van", name: "Van derheyden", message: "ARRIVÉE Van" },
-                { id: "ruffins", name: "Ruffins", message: "ARRIVÉE Ruffins" },
-                { id: "mairiemontreuil", name: "Mairie Montreuil", message: "ARRIVÉE Mairie" },
-                { id: "croixchavaux", name: "Croix de Chavaux", message: "ARRIVÉE Croix" },
-                { id: "gaulle", name: "Général de Gaulle", message: "ARRIVÉE Gaulle" },
-                { id: "eglise", name: "Église", message: "ARRIVÉE Église" }
+                { id: "chelles", name: "Chelles", time: "7:55", message: "DÉPART Chelles" },
+                { id: "mairie", name: "Mairie", time: "8:00", message: "ARRIVÉE Mairie" },
+                { id: "gare", name: "Gare", time: "8:03", message: "ARRIVÉE Gare" },
+                { id: "neuilly", name: "Neuilly/Marne", time: "8:13", message: "ARRIVÉE Neuilly" },
+                { id: "lamare", name: "La Mare", time: "8:19", message: "ARRIVÉE La Mare" },
+                { id: "gagnyarena", name: "Gagny Arena", time: "8:21", message: "ARRIVÉE Gagny" },
+                { id: "jeanmoulin", name: "Jean Moulin", time: "8:24", message: "ARRIVÉE Jean Moulin" },
+                { id: "henribarbusse", name: "Henri Barbusse", time: "8:27", message: "ARRIVÉE Barbusse" },
+                { id: "garegagny", name: "Gare de Gagny", time: "8:30", message: "ARRIVÉE Gare Gagny" },
+                { id: "chateau", name: "Château", time: "8:33", message: "ARRIVÉE Château" },
+                { id: "rosny", name: "Rosny", time: "8:36", message: "ARRIVÉE Rosny" },
+                { id: "van", name: "Van derheyden", time: "8:39", message: "ARRIVÉE Van" },
+                { id: "ruffins", name: "Ruffins", time: "8:49", message: "ARRIVÉE Ruffins" },
+                { id: "mairiemontreuil", name: "Mairie Montreuil", time: "8:59", message: "ARRIVÉE Mairie" },
+                { id: "croixchavaux", name: "Croix de Chavaux", time: "9:05", message: "ARRIVÉE Croix" },
+                { id: "gaulle", name: "Général de Gaulle", time: "9:08", message: "ARRIVÉE Gaulle" },
+                { id: "eglise", name: "Église", time: "9:30", message: "ARRIVÉE Église" }
             ] }
         };
 
@@ -251,21 +493,24 @@
             document.getElementById('selectionScreen').style.display = 'none';
             document.getElementById('driverInterface').style.display = 'block';
             document.getElementById('routeTitle').innerHTML = selectedRoute === 'charisma' ? '🚌 Bus Charisma' : '🚐 Navieo';
-            createButtons();
+            createStopButtons();
             updateShareLink();
             database.ref('current-route').set({ route: selectedRoute, startTime: new Date().toLocaleTimeString(), active: true });
         }
 
-        function createButtons() {
-            const container = document.getElementById('buttonsGroup');
+        function createStopButtons() {
+            const container = document.getElementById('stopsButtons');
             container.innerHTML = '';
-            stopsList.forEach((stop, index) => {
-                const btn = document.createElement('button');
-                btn.innerHTML = index === 0 ? `🚐 ${stop.message}` : `📍 ${stop.message}`;
-                btn.className = selectedRoute === 'charisma' ? 
-                    (index === 0 ? 'btn-depart' : index === 1 ? 'btn-brement' : index === 2 ? 'btn-noisy' : 'btn-retour') : 'btn-navieo';
-                btn.onclick = () => askPassengers(stop.id, stop.message, index);
-                btn.disabled = index !== 0;
+            stopsList.forEach((stop, idx) => {
+                const btn = document.createElement('div');
+                btn.className = 'stop-btn';
+                btn.id = `stop_${stop.id}`;
+                btn.innerHTML = `
+                    <div><div class="stop-name">${stop.message}</div><div class="stop-time">${stop.time}</div></div>
+                    <div class="stop-status" id="status_${stop.id}">${idx === 0 ? 'À faire' : 'En attente'}</div>
+                `;
+                btn.onclick = () => askPassengers(stop.id, stop.message, idx);
+                if (idx !== 0) btn.classList.add('disabled');
                 container.appendChild(btn);
             });
         }
@@ -288,45 +533,49 @@
             updateHistory();
             database.ref('bus-status').set({ etape: pendingStop.id, message: pendingStop.message, time: time, passengers: currentPassengerCount, route: selectedRoute });
             document.getElementById('status').innerHTML = `✅ ${pendingStop.message}<br><small>${time} - ${currentPassengerCount} passager(s)</small>`;
-            updateButtonsAfterStop(pendingStop.id);
+            updateStopButtons(pendingStop.id);
             updateProgress();
             closeModal();
             pendingStop = null;
         }
 
-        function updateButtonsAfterStop(stopId) {
+        function updateStopButtons(stopId) {
             const stopIndex = stopsList.findIndex(s => s.id === stopId);
-            const buttons = document.querySelectorAll('#buttonsGroup button');
+            const buttons = document.querySelectorAll('.stop-btn');
             buttons.forEach((btn, idx) => {
-                if (idx <= stopIndex) btn.disabled = true;
-                else if (idx === stopIndex + 1) btn.disabled = false;
-                else btn.disabled = true;
+                const statusSpan = btn.querySelector('.stop-status');
+                if (idx <= stopIndex) {
+                    btn.classList.add('disabled');
+                    if (idx === stopIndex) statusSpan.innerHTML = '✓ Fait';
+                    else statusSpan.innerHTML = '✓ Fait';
+                    statusSpan.classList.add('done');
+                } else if (idx === stopIndex + 1) {
+                    btn.classList.remove('disabled');
+                    statusSpan.innerHTML = '▶ En cours';
+                    statusSpan.classList.add('current');
+                } else {
+                    btn.classList.add('disabled');
+                    statusSpan.innerHTML = '⏱ À venir';
+                }
             });
             if (stopIndex === stopsList.length - 1) showReport();
-            updateProgress();
         }
 
         function updateProgress() {
-            let currentIndex = -1;
-            const buttons = document.querySelectorAll('#buttonsGroup button');
-            buttons.forEach((btn, idx) => { if (btn.disabled && idx > currentIndex) currentIndex = idx; });
-            const progress = currentIndex >= 0 ? Math.round((currentIndex / (stopsList.length - 1)) * 100) : 0;
+            let completed = document.querySelectorAll('.stop-status.done').length;
+            const progress = Math.round((completed / stopsList.length) * 100);
             document.getElementById('progressFill').style.width = `${progress}%`;
         }
 
         function sendMessage(message) {
             const now = new Date();
             const time = now.toLocaleTimeString();
-            database.ref('bus-status/message').set({ text: message, time: time, from: 'equipage' });
+            database.ref('bus-status/message').set({ text: message, time: time });
             history.unshift({ stop: '💬 Message', passengers: message, time: time, isMessage: true });
             updateHistory();
+            const original = document.getElementById('status').innerHTML;
             document.getElementById('status').innerHTML = `💬 Message envoyé: "${message}"<br><small>${time}</small>`;
-            setTimeout(() => {
-                const currentStatus = document.getElementById('status').innerHTML;
-                if (currentStatus.includes('Message envoyé')) {
-                    document.getElementById('status').innerHTML = `📍 Trajet en cours`;
-                }
-            }, 3000);
+            setTimeout(() => document.getElementById('status').innerHTML = original, 3000);
             setTimeout(() => database.ref('bus-status/message').remove(), 10000);
         }
 
@@ -342,10 +591,7 @@
         function sendCustomMessage() {
             const input = document.getElementById('customMsg');
             const msg = input.value.trim();
-            if (msg) { 
-                sendMessage(msg); 
-                input.value = ''; 
-            }
+            if (msg) { sendMessage(msg); input.value = ''; }
         }
 
         function incrementCount() { currentPassengerCount++; document.getElementById('passengerCount').innerText = currentPassengerCount; }
@@ -356,12 +602,12 @@
             const container = document.getElementById('historyList');
             container.innerHTML = '';
             if (history.length === 0) { container.innerHTML = '<div class="history-item">Aucun événement</div>'; return; }
-            history.slice(0, 10).forEach(item => {
+            history.slice(0, 8).forEach(item => {
                 const div = document.createElement('div');
                 div.className = 'history-item';
-                if (item.isTraffic) div.innerHTML = `<span>⚠️ ${item.passengers}</span><span style="float:right;">${item.time}</span>`;
-                else if (item.isMessage) div.innerHTML = `<span>💬 ${item.passengers}</span><span style="float:right;">${item.time}</span>`;
-                else div.innerHTML = `<span>📍 ${item.stop}</span><span style="float:right;">+${item.passengers} • ${item.time}</span>`;
+                if (item.isTraffic) div.innerHTML = `<span>⚠️ ${item.passengers}</span><span>${item.time}</span>`;
+                else if (item.isMessage) div.innerHTML = `<span>💬 ${item.passengers}</span><span>${item.time}</span>`;
+                else div.innerHTML = `<span>📍 ${item.stop}</span><span>+${item.passengers} • ${item.time}</span>`;
                 container.appendChild(div);
             });
         }
@@ -370,26 +616,19 @@
             const total = Object.values(passengersData).reduce((a,b) => a+b, 0);
             const reportDiv = document.createElement('div');
             reportDiv.className = 'card';
-            reportDiv.innerHTML = `<h3>📊 Bilan du trajet</h3><p style="font-size:2rem; font-weight:700; text-align:center;">${total}</p><p style="text-align:center;">passagers transportés</p><p style="text-align:center; font-size:0.8rem;">${stopsList.length} arrêts desservis</p>`;
+            reportDiv.innerHTML = `<div class="card-title">📊 Bilan du service</div><p style="font-size:2rem; font-weight:700; text-align:center;">${total}</p><p style="text-align:center;">passagers transportés</p><p style="text-align:center; font-size:0.8rem;">${stopsList.length} arrêts desservis</p>`;
             document.getElementById('driverInterface').insertBefore(reportDiv, document.getElementById('driverInterface').children[3]);
         }
 
         function getBaseUrl() { return window.location.origin + window.location.pathname.replace(/[^/]*$/, ''); }
         function updateShareLink() {
-            const linkInput = document.getElementById('shareLink');
-            if (selectedRoute) { linkInput.value = `${getBaseUrl()}passager.html?route=${selectedRoute}`; }
+            if (selectedRoute) { document.getElementById('shareLink').value = `${getBaseUrl()}passager.html?route=${selectedRoute}`; }
         }
-        function copyLink() {
-            const link = document.getElementById('shareLink').value;
-            if (link) { navigator.clipboard.writeText(link); alert("🔗 Lien copié ! Partagez-le sur WhatsApp"); }
-        }
-        function shareOnWhatsApp() {
-            const link = document.getElementById('shareLink').value;
-            if (link) { window.open(`https://wa.me/?text=🚌 Suivez le bus en temps réel : ${link}`, '_blank'); }
-        }
+        function copyLink() { const link = document.getElementById('shareLink').value; if (link) { navigator.clipboard.writeText(link); alert("🔗 Lien copié !"); } }
+        function shareOnWhatsApp() { const link = document.getElementById('shareLink').value; if (link) { window.open(`https://wa.me/?text=🚌 Suivez le bus en temps réel : ${link}`, '_blank'); } }
 
         function resetJourney() {
-            if (confirm('Réinitialiser le trajet ?')) {
+            if (confirm('Réinitialiser le service ?')) {
                 database.ref('bus-status').remove();
                 database.ref('passengers').remove();
                 database.ref('current-route').remove();
