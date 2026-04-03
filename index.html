@@ -10,22 +10,26 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
             background: #f5f7fb;
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            color: #1a2c3e;
+            color: #1a1a2e;
             line-height: 1.4;
             min-height: 100vh;
-            -webkit-font-smoothing: antialiased;
         }
 
-        /* Header */
+        /* Header moderne */
         .app-header {
-            background: #ffffff;
+            background: rgba(255,255,255,0.98);
+            backdrop-filter: blur(10px);
             padding: 24px 20px 16px;
-            border-bottom: 1px solid #eef2f6;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
         .header-content {
@@ -49,7 +53,7 @@
 
         .logo-sub {
             font-size: 0.7rem;
-            color: #5a6e7c;
+            color: #6c757d;
             margin-top: 4px;
         }
 
@@ -60,35 +64,56 @@
             padding: 24px 20px;
         }
 
-        /* Cartes de rôle */
+        /* Cartes de rôle - Design premium */
         .role-card {
             background: #ffffff;
             border-radius: 28px;
             padding: 24px;
             margin-bottom: 20px;
             cursor: pointer;
-            transition: all 0.25s ease;
-            border: 1px solid #eef2f6;
+            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            border: 1px solid rgba(0,0,0,0.05);
             position: relative;
             overflow: hidden;
         }
 
+        .role-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #2c5a8c, #00a86b);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .role-card:hover::before {
+            transform: scaleX(1);
+        }
+
         .role-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.06);
-            border-color: #cbd5e1;
+            transform: translateY(-4px);
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.12);
+            border-color: rgba(44,90,140,0.2);
         }
 
         .role-card.selected {
             border-color: #2c5a8c;
             background: linear-gradient(135deg, #f8fafd, #f0f6ff);
+            box-shadow: 0 8px 25px rgba(44,90,140,0.12);
+        }
+
+        .role-card.selected::before {
+            transform: scaleX(1);
         }
 
         .role-card-header {
             display: flex;
             align-items: center;
-            gap: 16px;
-            margin-bottom: 12px;
+            gap: 18px;
+            margin-bottom: 14px;
         }
 
         .role-icon {
@@ -101,6 +126,11 @@
             justify-content: center;
             color: white;
             font-size: 1.4rem;
+            transition: all 0.3s;
+        }
+
+        .role-card:hover .role-icon {
+            transform: scale(1.05);
         }
 
         .role-icon.control {
@@ -110,41 +140,43 @@
         .role-title {
             font-size: 1.2rem;
             font-weight: 700;
-            color: #1a2c3e;
+            color: #1a1a2e;
         }
 
         .role-badge {
             font-size: 0.65rem;
-            color: #5a6e7c;
+            color: #6c757d;
             margin-top: 4px;
+            font-weight: 500;
         }
 
         .role-description {
             font-size: 0.85rem;
-            color: #5a6e7c;
+            color: #6c757d;
             line-height: 1.5;
-            margin-left: 72px;
+            margin-left: 74px;
         }
 
-        /* Séparateur */
+        /* Séparateur élégant */
         .separator {
             display: flex;
             align-items: center;
-            gap: 12px;
-            margin: 24px 0 20px;
+            gap: 14px;
+            margin: 28px 0 24px;
         }
 
         .separator-line {
             flex: 1;
             height: 1px;
-            background: #eef2f6;
+            background: linear-gradient(90deg, transparent, #e0e7ef, transparent);
         }
 
         .separator-text {
             font-size: 0.7rem;
-            color: #5a6e7c;
+            color: #94a3b8;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
+            font-weight: 600;
         }
 
         /* Bouton principal */
@@ -154,43 +186,48 @@
             color: white;
             border: none;
             padding: 16px;
-            border-radius: 50px;
-            font-weight: 600;
+            border-radius: 60px;
+            font-weight: 700;
             font-size: 0.95rem;
             cursor: pointer;
             transition: all 0.2s;
             margin-top: 8px;
+            box-shadow: 0 4px 12px rgba(44,90,140,0.2);
         }
 
         .btn-primary:disabled {
             opacity: 0.5;
             cursor: not-allowed;
+            box-shadow: none;
         }
 
         .btn-primary:active:not(:disabled) {
-            transform: scale(0.98);
+            transform: scale(0.97);
         }
 
         /* Section informations */
         .info-section {
             background: #ffffff;
             border-radius: 24px;
-            padding: 20px;
+            padding: 24px;
             margin-top: 32px;
-            border: 1px solid #eef2f6;
+            border: 1px solid rgba(0,0,0,0.05);
         }
 
         .info-title {
-            font-weight: 600;
-            font-size: 0.8rem;
-            margin-bottom: 16px;
-            color: #1a2c3e;
+            font-weight: 700;
+            font-size: 0.85rem;
+            margin-bottom: 18px;
+            color: #1a1a2e;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .info-list {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 14px;
         }
 
         .info-item {
@@ -198,7 +235,7 @@
             align-items: center;
             gap: 12px;
             font-size: 0.85rem;
-            color: #5a6e7c;
+            color: #6c757d;
         }
 
         .info-dot {
@@ -214,15 +251,15 @@
             padding: 24px 20px 32px;
             font-size: 0.65rem;
             color: #94a3b8;
-            border-top: 1px solid #eef2f6;
+            border-top: 1px solid rgba(0,0,0,0.05);
             margin-top: 20px;
         }
 
-        /* Animation */
-        @keyframes fadeIn {
+        /* Animations */
+        @keyframes fadeInUp {
             from {
                 opacity: 0;
-                transform: translateY(10px);
+                transform: translateY(20px);
             }
             to {
                 opacity: 1;
@@ -231,8 +268,12 @@
         }
 
         .role-card {
-            animation: fadeIn 0.3s ease-out;
+            animation: fadeInUp 0.4s ease-out;
         }
+
+        .role-card:nth-child(1) { animation-delay: 0.1s; }
+        .role-card:nth-child(2) { animation-delay: 0.2s; }
+        .info-section { animation: fadeInUp 0.4s ease-out 0.3s both; }
     </style>
 </head>
 <body>
@@ -286,7 +327,9 @@
 
         <!-- Section informations -->
         <div class="info-section">
-            <div class="info-title">Informations service</div>
+            <div class="info-title">
+                <span>ℹ️</span> Informations service
+            </div>
             <div class="info-list">
                 <div class="info-item">
                     <div class="info-dot"></div>
@@ -302,7 +345,7 @@
                 </div>
                 <div class="info-item">
                     <div class="info-dot"></div>
-                    <span>Rapports d'activité et statistiques</span>
+                    <span>Rapports d'activité et statistiques détaillées</span>
                 </div>
             </div>
         </div>
@@ -313,7 +356,7 @@
     </div>
 
     <script>
-        // Configuration Firebase (inchangée)
+        // Configuration Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyC4sWMc3fNaMpZ9cD8ahQdMJn6BjRyJDzk",
             authDomain: "charisma-bus.firebaseapp.com",
@@ -324,7 +367,7 @@
             appId: "1:630450080183:web:c204b463f63b12a8d30032"
         };
 
-        // Initialisation uniquement si Firebase n'est pas déjà chargé
+        // Initialisation Firebase
         if (typeof firebase !== 'undefined' && !firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
         }

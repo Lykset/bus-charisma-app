@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>Charisma Mobility • Suivi en temps réel</title>
+    <title>Charisma • Mobilité</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
@@ -12,21 +12,23 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
             background: #f5f7fb;
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            color: #1a2c3e;
+            color: #1a1a2e;
             line-height: 1.4;
-            -webkit-font-smoothing: antialiased;
+            padding-bottom: 20px;
         }
 
-        /* Header */
+        /* Header moderne */
         .app-header {
-            background: #ffffff;
+            background: rgba(255,255,255,0.98);
+            backdrop-filter: blur(10px);
             padding: 20px 20px 12px;
-            border-bottom: 1px solid #eef2f6;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
             position: sticky;
             top: 0;
             z-index: 100;
@@ -41,99 +43,22 @@
         }
 
         .service-name {
-            font-size: 1.5rem;
-            font-weight: 700;
-            letter-spacing: -0.3px;
+            font-size: 1.6rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
             background: linear-gradient(135deg, #1e3c72, #2c5a8c);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
         }
 
-        .service-badge {
-            background: #eef2f6;
+        .live-badge {
+            background: rgba(0,168,107,0.12);
             padding: 6px 14px;
             border-radius: 30px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            color: #2c5a8c;
-        }
-
-        /* Container */
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        /* État d'attente */
-        .waiting-card {
-            background: #ffffff;
-            border-radius: 28px;
-            padding: 48px 28px;
-            text-align: center;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.02);
-            border: 1px solid #eef2f6;
-        }
-
-        .waiting-icon {
-            width: 80px;
-            height: 80px;
-            background: #f0f4f9;
-            border-radius: 80px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px;
-            font-size: 2rem;
-        }
-
-        .waiting-title {
-            font-size: 1.3rem;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-
-        .waiting-text {
-            color: #5a6e7c;
-            font-size: 0.85rem;
-        }
-
-        /* Carte d'information trajet */
-        .trip-card {
-            background: #ffffff;
-            border-radius: 28px;
-            padding: 20px;
-            margin-bottom: 16px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.03);
-            border: 1px solid #eef2f6;
-        }
-
-        .trip-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            margin-bottom: 16px;
-            flex-wrap: wrap;
-        }
-
-        .trip-line {
-            font-weight: 700;
-            font-size: 1.1rem;
-        }
-
-        .trip-direction {
-            font-size: 0.7rem;
-            color: #5a6e7c;
-        }
-
-        .live-badge {
             display: flex;
             align-items: center;
             gap: 6px;
-            background: #e8f5e9;
-            padding: 6px 12px;
-            border-radius: 30px;
         }
 
         .live-dot {
@@ -145,8 +70,8 @@
         }
 
         @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.4; }
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.8); }
         }
 
         .live-text {
@@ -155,102 +80,157 @@
             color: #00a86b;
         }
 
-        /* Position actuelle */
-        .position-card {
-            background: #f8fafd;
-            border-radius: 24px;
+        /* Container */
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
             padding: 20px;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            border: 1px solid #eef2f6;
         }
 
-        .position-marker {
-            width: 56px;
-            height: 56px;
+        /* État d'attente */
+        .waiting-card {
+            background: white;
+            border-radius: 32px;
+            padding: 60px 28px;
+            text-align: center;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.04);
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .waiting-icon {
+            width: 80px;
+            height: 80px;
             background: linear-gradient(135deg, #1e3c72, #2c5a8c);
-            border-radius: 56px;
+            border-radius: 80px;
             display: flex;
             align-items: center;
             justify-content: center;
+            margin: 0 auto 24px;
+            font-size: 2rem;
             color: white;
-            font-size: 1.4rem;
         }
 
-        .position-details {
-            flex: 1;
+        .waiting-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .waiting-text {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        /* Carte trajet */
+        .trip-card {
+            background: white;
+            border-radius: 28px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .trip-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .trip-line {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .trip-direction {
+            font-size: 0.7rem;
+            color: #6c757d;
+        }
+
+        /* Position actuelle */
+        .position-card {
+            background: linear-gradient(135deg, #1e3c72, #2c5a8c);
+            border-radius: 28px;
+            padding: 24px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            color: white;
+        }
+
+        .position-icon {
+            width: 64px;
+            height: 64px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
         }
 
         .position-label {
-            font-size: 0.65rem;
+            font-size: 0.7rem;
+            opacity: 0.8;
             text-transform: uppercase;
-            color: #5a6e7c;
             letter-spacing: 0.5px;
         }
 
         .position-name {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             font-weight: 700;
-            margin: 4px 0;
+            margin: 6px 0 4px;
         }
 
         .position-time {
-            font-size: 0.75rem;
-            color: #00a86b;
-            font-weight: 500;
+            font-size: 0.8rem;
+            opacity: 0.9;
         }
 
-        /* Timeline visuelle */
-        .timeline-container {
-            background: #ffffff;
-            border-radius: 24px;
-            padding: 20px;
+        /* Timeline interactive */
+        .timeline-card {
+            background: white;
+            border-radius: 28px;
+            padding: 24px;
             margin-bottom: 20px;
-            border: 1px solid #eef2f6;
-        }
-
-        .timeline-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 16px;
-            font-size: 0.7rem;
-            color: #5a6e7c;
+            border: 1px solid rgba(0,0,0,0.05);
         }
 
         .timeline-track {
             position: relative;
             height: 4px;
-            background: #eef2f6;
+            background: #e9ecef;
             border-radius: 4px;
-            margin: 20px 0;
+            margin: 30px 0 20px;
         }
 
         .timeline-progress {
             position: absolute;
             height: 4px;
-            background: linear-gradient(90deg, #1e3c72, #00a86b);
+            background: linear-gradient(90deg, #2c5a8c, #00a86b);
             border-radius: 4px;
             width: 0%;
-            transition: width 0.5s ease;
+            transition: width 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1);
         }
 
         .timeline-marker {
             position: absolute;
-            top: -8px;
-            width: 20px;
-            height: 20px;
-            background: #ffffff;
-            border: 3px solid #1e3c72;
-            border-radius: 20px;
-            transition: left 0.5s ease;
+            top: -10px;
+            width: 24px;
+            height: 24px;
+            background: white;
+            border: 3px solid #2c5a8c;
+            border-radius: 24px;
+            transition: left 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
         .timeline-stops {
             display: flex;
             justify-content: space-between;
-            margin-top: 24px;
+            margin-top: 8px;
         }
 
         .timeline-stop {
@@ -264,17 +244,20 @@
             background: #cbd5e1;
             border-radius: 8px;
             margin: 0 auto 8px;
+            transition: all 0.3s;
         }
 
         .timeline-stop.completed .timeline-stop-dot {
             background: #00a86b;
+            width: 10px;
+            height: 10px;
         }
 
         .timeline-stop.active .timeline-stop-dot {
             background: #f39c12;
             width: 12px;
             height: 12px;
-            box-shadow: 0 0 0 3px #fff3e0;
+            box-shadow: 0 0 0 4px rgba(243,156,18,0.2);
         }
 
         .timeline-stop-name {
@@ -284,34 +267,33 @@
 
         .timeline-stop-time {
             font-size: 0.6rem;
-            color: #5a6e7c;
+            color: #6c757d;
             margin-top: 4px;
         }
 
-        /* Liste des arrêts */
+        /* Liste arrêts */
         .stops-section {
-            background: #ffffff;
-            border-radius: 24px;
+            background: white;
+            border-radius: 28px;
             overflow: hidden;
-            border: 1px solid #eef2f6;
-            margin-bottom: 20px;
+            border: 1px solid rgba(0,0,0,0.05);
         }
 
-        .section-title {
-            padding: 16px 20px;
+        .section-header {
+            padding: 18px 20px;
             background: #f8fafd;
             font-weight: 600;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             border-bottom: 1px solid #eef2f6;
         }
 
         .stop-row {
             display: flex;
             align-items: center;
-            padding: 14px 20px;
+            padding: 16px 20px;
             border-bottom: 1px solid #f0f2f5;
-            gap: 14px;
-            transition: background 0.2s;
+            gap: 16px;
+            transition: all 0.2s;
         }
 
         .stop-row:last-child {
@@ -323,22 +305,22 @@
         }
 
         .stop-row.active {
-            background: #fff8f0;
+            background: linear-gradient(135deg, #fff8f0, #fff5e8);
             border-left: 3px solid #f39c12;
         }
 
-        .stop-order {
+        .stop-number {
             width: 32px;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             font-weight: 600;
-            color: #5a6e7c;
+            color: #6c757d;
         }
 
-        .stop-row.completed .stop-order {
+        .stop-row.completed .stop-number {
             color: #00a86b;
         }
 
-        .stop-row.active .stop-order {
+        .stop-row.active .stop-number {
             color: #f39c12;
         }
 
@@ -347,14 +329,14 @@
         }
 
         .stop-name {
-            font-weight: 500;
-            font-size: 0.9rem;
+            font-weight: 600;
+            font-size: 0.95rem;
         }
 
-        .stop-schedule {
-            font-size: 0.65rem;
-            color: #5a6e7c;
-            margin-top: 2px;
+        .stop-time {
+            font-size: 0.7rem;
+            color: #6c757d;
+            margin-top: 4px;
         }
 
         .stop-passengers {
@@ -362,7 +344,7 @@
             font-weight: 600;
             color: #2c5a8c;
             background: #eef2f6;
-            padding: 4px 10px;
+            padding: 4px 12px;
             border-radius: 20px;
         }
 
@@ -372,14 +354,14 @@
             border-radius: 20px;
             padding: 14px 18px;
             margin-bottom: 16px;
-            border-left: 4px solid #f39c12;
             display: none;
             align-items: center;
             gap: 12px;
+            border: 1px solid #ffe0b5;
         }
 
         .alert-icon {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
         }
 
         .alert-message {
@@ -394,73 +376,68 @@
             padding: 20px;
             font-size: 0.65rem;
             color: #94a3b8;
-            border-top: 1px solid #eef2f6;
-            margin-top: 20px;
         }
 
-        /* Animation bus */
-        @keyframes busMove {
-            0% { transform: translateX(0); }
-            50% { transform: translateX(5px); }
-            100% { transform: translateX(0); }
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .trip-card, .position-card, .timeline-card, .stops-section {
+            animation: fadeInUp 0.4s ease-out;
         }
     </style>
 </head>
 <body>
     <div class="app-header">
         <div class="header-content">
-            <div class="service-name">Charisma Mobility</div>
-            <div class="service-badge" id="routeBadge">Service actif</div>
+            <div class="service-name">Charisma</div>
+            <div class="live-badge">
+                <div class="live-dot"></div>
+                <div class="live-text">En direct</div>
+            </div>
         </div>
     </div>
 
     <div class="container">
-        <!-- Écran d'attente -->
         <div id="waitingState" class="waiting-card">
             <div class="waiting-icon">🚌</div>
             <div class="waiting-title">En attente du départ</div>
             <div class="waiting-text">Le service n'a pas encore débuté.<br>Restez connecté pour suivre en temps réel.</div>
         </div>
 
-        <!-- Contenu principal -->
         <div id="mainContent" style="display: none;">
-            <!-- Carte trajet -->
             <div class="trip-card">
                 <div class="trip-header">
                     <div>
                         <div class="trip-line" id="routeName">Bus Charisma</div>
                         <div class="trip-direction" id="routeDirection">Direction Église Charisma</div>
                     </div>
-                    <div class="live-badge">
-                        <div class="live-dot"></div>
-                        <div class="live-text">En direct</div>
-                    </div>
                 </div>
             </div>
 
-            <!-- Alerte -->
             <div id="alertCard" class="alert-card">
                 <div class="alert-icon">⚠️</div>
                 <div class="alert-message" id="alertMessage"></div>
             </div>
 
-            <!-- Position actuelle -->
             <div class="position-card">
-                <div class="position-marker" id="positionMarker">🚌</div>
-                <div class="position-details">
+                <div class="position-icon" id="positionIcon">🚌</div>
+                <div>
                     <div class="position-label">Position actuelle</div>
                     <div class="position-name" id="currentLocation">-</div>
                     <div class="position-time" id="currentTime">--:--</div>
                 </div>
             </div>
 
-            <!-- Timeline visuelle -->
-            <div class="timeline-container">
-                <div class="timeline-header">
-                    <span>Départ</span>
-                    <span id="progressPercent">0%</span>
-                    <span>Arrivée</span>
-                </div>
+            <div class="timeline-card">
                 <div class="timeline-track">
                     <div class="timeline-progress" id="timelineProgress"></div>
                     <div class="timeline-marker" id="timelineMarker"></div>
@@ -468,16 +445,15 @@
                 <div class="timeline-stops" id="timelineStops"></div>
             </div>
 
-            <!-- Liste des arrêts -->
             <div class="stops-section">
-                <div class="section-title">Parcours et horaires</div>
+                <div class="section-header">Parcours et horaires</div>
                 <div id="stopsList"></div>
             </div>
         </div>
     </div>
 
     <div class="app-footer">
-        Charisma Mobility • Service navettes • Mise à jour automatique
+        Charisma Mobility • Mise à jour automatique
     </div>
 
     <script>
@@ -490,7 +466,6 @@
             messagingSenderId: "630450080183",
             appId: "1:630450080183:web:c204b463f63b12a8d30032"
         };
-
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
@@ -546,7 +521,7 @@
                 if (idx === currentStopIndex) div.classList.add('active');
                 div.innerHTML = `
                     <div class="timeline-stop-dot"></div>
-                    <div class="timeline-stop-name">${stop.name.length > 12 ? stop.name.substring(0,10)+'...' : stop.name}</div>
+                    <div class="timeline-stop-name">${stop.name.length > 12 ? stop.name.substring(0,10)+'…' : stop.name}</div>
                     <div class="timeline-stop-time">${stop.time}</div>
                 `;
                 container.appendChild(div);
@@ -563,10 +538,10 @@
                 if (idx < currentStopIndex) div.classList.add('completed');
                 if (idx === currentStopIndex) div.classList.add('active');
                 div.innerHTML = `
-                    <div class="stop-order">${String(idx + 1).padStart(2, '0')}</div>
+                    <div class="stop-number">${String(idx + 1).padStart(2, '0')}</div>
                     <div class="stop-info">
                         <div class="stop-name">${stop.name}</div>
-                        <div class="stop-schedule">${stop.time}</div>
+                        <div class="stop-time">${stop.time}</div>
                     </div>
                 `;
                 container.appendChild(div);
@@ -584,22 +559,19 @@
                 document.getElementById('mainContent').style.display = 'block';
                 document.getElementById('routeName').innerHTML = ROUTES[selectedRoute].name;
                 document.getElementById('routeDirection').innerHTML = ROUTES[selectedRoute].direction;
-                document.getElementById('routeBadge').innerHTML = ROUTES[selectedRoute].name;
             }
 
             const stopIndex = ROUTES[selectedRoute].stops.findIndex(s => s.id === stopId);
             if (stopIndex !== -1) {
                 currentStopIndex = stopIndex;
                 const currentStop = ROUTES[selectedRoute].stops[stopIndex];
-                document.getElementById('positionMarker').innerHTML = stopId === 'depart' || stopId === 'retour' || stopId === 'eglise' ? '⛪' : '🚌';
+                document.getElementById('positionIcon').innerHTML = stopId === 'depart' || stopId === 'retour' || stopId === 'eglise' ? '⛪' : '🚌';
                 document.getElementById('currentLocation').innerHTML = currentStop.name;
                 document.getElementById('currentTime').innerHTML = time;
 
                 const progress = (stopIndex / (ROUTES[selectedRoute].stops.length - 1)) * 100;
                 document.getElementById('timelineProgress').style.width = `${progress}%`;
-                document.getElementById('progressPercent').innerHTML = `${Math.round(progress)}%`;
-                
-                const markerPos = (progress / 100) * (document.querySelector('.timeline-track')?.offsetWidth - 20 || 0);
+                const markerPos = (progress / 100) * (document.querySelector('.timeline-track')?.offsetWidth - 24 || 0);
                 document.getElementById('timelineMarker').style.left = `${Math.min(progress, 98)}%`;
 
                 renderStops();

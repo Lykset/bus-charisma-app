@@ -18,12 +18,12 @@
         body {
             background: #f5f7fb;
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            color: #1a2c3e;
+            color: #1a1a2e;
         }
 
         /* Header */
         .app-header {
-            background: #ffffff;
+            background: white;
             padding: 20px 24px;
             border-bottom: 1px solid #eef2f6;
             position: sticky;
@@ -43,7 +43,7 @@
 
         .header-title {
             font-size: 1.3rem;
-            font-weight: 700;
+            font-weight: 800;
             background: linear-gradient(135deg, #1e3c72, #2c5a8c);
             -webkit-background-clip: text;
             background-clip: text;
@@ -51,18 +51,19 @@
         }
 
         .header-badge {
-            background: #eef2f6;
+            background: #f8fafd;
             padding: 6px 14px;
             border-radius: 30px;
             font-size: 0.7rem;
             font-weight: 600;
+            color: #2c5a8c;
         }
 
         /* Navigation */
         .nav-tabs {
             display: flex;
-            gap: 8px;
-            background: #ffffff;
+            gap: 4px;
+            background: white;
             padding: 0 24px;
             border-bottom: 1px solid #eef2f6;
         }
@@ -71,10 +72,11 @@
             padding: 14px 24px;
             background: none;
             border: none;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
-            color: #5a6e7c;
+            color: #6c757d;
             transition: all 0.2s;
+            font-size: 0.85rem;
         }
 
         .tab-btn.active {
@@ -102,20 +104,21 @@
             max-width: 400px;
             margin: 100px auto;
             background: white;
-            border-radius: 28px;
-            padding: 32px;
+            border-radius: 32px;
+            padding: 40px;
             text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.05);
             border: 1px solid #eef2f6;
         }
 
         .login-card input {
             width: 100%;
             padding: 14px;
-            margin: 16px 0;
+            margin: 20px 0;
             border: 1px solid #eef2f6;
-            border-radius: 50px;
+            border-radius: 60px;
             font-family: inherit;
+            font-size: 0.9rem;
         }
 
         /* KPIs */
@@ -123,7 +126,7 @@
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 20px;
-            margin-bottom: 24px;
+            margin-bottom: 28px;
         }
 
         @media (max-width: 800px) {
@@ -132,22 +135,32 @@
 
         .kpi-card {
             background: white;
-            border-radius: 20px;
-            padding: 20px;
+            border-radius: 24px;
+            padding: 22px;
             border: 1px solid #eef2f6;
+            transition: all 0.2s;
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.04);
         }
 
         .kpi-label {
             font-size: 0.7rem;
             text-transform: uppercase;
-            color: #5a6e7c;
+            color: #6c757d;
             letter-spacing: 0.5px;
         }
 
         .kpi-value {
-            font-size: 1.8rem;
-            font-weight: 700;
+            font-size: 2rem;
+            font-weight: 800;
             margin-top: 8px;
+            background: linear-gradient(135deg, #1e3c72, #2c5a8c);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
         }
 
         /* Cartes bus */
@@ -155,7 +168,7 @@
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 24px;
-            margin-bottom: 24px;
+            margin-bottom: 28px;
         }
 
         @media (max-width: 800px) {
@@ -164,13 +177,19 @@
 
         .bus-card {
             background: white;
-            border-radius: 24px;
+            border-radius: 28px;
             overflow: hidden;
             border: 1px solid #eef2f6;
+            transition: all 0.2s;
+        }
+
+        .bus-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.04);
         }
 
         .bus-header {
-            padding: 16px 20px;
+            padding: 20px;
             background: #f8fafd;
             border-bottom: 1px solid #eef2f6;
             display: flex;
@@ -181,27 +200,28 @@
         .bus-title {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
         }
 
         .bus-badge {
-            width: 44px;
-            height: 44px;
-            border-radius: 44px;
-            background: #2c5a8c;
+            width: 48px;
+            height: 48px;
+            border-radius: 48px;
+            background: linear-gradient(135deg, #1e3c72, #2c5a8c);
             color: white;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 700;
+            font-weight: 800;
+            font-size: 1.1rem;
         }
 
         .bus-badge.navieo {
-            background: #00a86b;
+            background: linear-gradient(135deg, #00a86b, #008f5a);
         }
 
         .bus-status {
-            padding: 4px 12px;
+            padding: 6px 14px;
             border-radius: 30px;
             font-size: 0.7rem;
             font-weight: 600;
@@ -214,17 +234,17 @@
 
         .status-inactive {
             background: #f8fafd;
-            color: #5a6e7c;
+            color: #6c757d;
         }
 
         .bus-content {
-            padding: 16px 20px;
+            padding: 20px;
         }
 
         .info-line {
             display: flex;
             justify-content: space-between;
-            padding: 8px 0;
+            padding: 10px 0;
             border-bottom: 1px solid #f0f2f5;
         }
 
@@ -232,11 +252,11 @@
             background: #eef2f6;
             border-radius: 10px;
             height: 6px;
-            margin: 12px 0;
+            margin: 16px 0;
         }
 
         .progress-fill {
-            background: #00a86b;
+            background: linear-gradient(90deg, #2c5a8c, #00a86b);
             height: 100%;
             border-radius: 10px;
             width: 0%;
@@ -245,14 +265,14 @@
         /* Sections */
         .section-card {
             background: white;
-            border-radius: 24px;
+            border-radius: 28px;
             border: 1px solid #eef2f6;
             overflow: hidden;
-            margin-bottom: 24px;
+            margin-bottom: 28px;
         }
 
         .section-header {
-            padding: 16px 20px;
+            padding: 20px;
             background: #f8fafd;
             border-bottom: 1px solid #eef2f6;
             display: flex;
@@ -269,44 +289,53 @@
 
         .data-table th {
             text-align: left;
-            padding: 12px 16px;
+            padding: 14px 20px;
             background: #f8fafd;
             font-weight: 600;
             font-size: 0.7rem;
-            color: #5a6e7c;
+            color: #6c757d;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .data-table td {
-            padding: 12px 16px;
+            padding: 14px 20px;
             border-bottom: 1px solid #f0f2f5;
             font-size: 0.85rem;
         }
 
         .btn-icon {
-            background: #2c5a8c;
+            background: linear-gradient(135deg, #2c5a8c, #1e3c72);
             color: white;
             border: none;
-            padding: 8px 16px;
-            border-radius: 30px;
+            padding: 10px 20px;
+            border-radius: 40px;
             font-size: 0.75rem;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-icon:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(44,90,140,0.3);
         }
 
         .btn-outline {
             background: transparent;
             border: 1px solid #eef2f6;
-            padding: 6px 12px;
-            border-radius: 20px;
+            padding: 8px 16px;
+            border-radius: 30px;
             cursor: pointer;
+            font-size: 0.7rem;
         }
 
         /* Graphiques */
         .charts-row {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-            margin-bottom: 24px;
+            gap: 24px;
+            margin-bottom: 28px;
         }
 
         @media (max-width: 700px) {
@@ -315,13 +344,13 @@
 
         .chart-card {
             background: white;
-            border-radius: 20px;
+            border-radius: 24px;
             padding: 20px;
             border: 1px solid #eef2f6;
         }
 
         canvas {
-            max-height: 200px;
+            max-height: 220px;
             width: 100%;
         }
 
@@ -334,6 +363,7 @@
             width: 100%;
             height: 100%;
             background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(4px);
             justify-content: center;
             align-items: center;
             z-index: 1000;
@@ -341,38 +371,49 @@
 
         .modal-content {
             background: white;
-            border-radius: 24px;
-            padding: 28px;
+            border-radius: 32px;
+            padding: 32px;
             max-width: 500px;
             width: 90%;
         }
 
         .form-group {
-            margin-bottom: 16px;
+            margin-bottom: 20px;
         }
 
         .form-group label {
             display: block;
             font-size: 0.75rem;
-            font-weight: 500;
-            margin-bottom: 6px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #1a1a2e;
         }
 
         .form-group input, .form-group select {
             width: 100%;
-            padding: 12px;
+            padding: 14px;
             border: 1px solid #eef2f6;
-            border-radius: 12px;
+            border-radius: 16px;
             font-family: inherit;
+            font-size: 0.9rem;
         }
 
         .footer {
             text-align: center;
-            padding: 20px;
+            padding: 24px;
             color: #94a3b8;
             font-size: 0.7rem;
             border-top: 1px solid #eef2f6;
             margin-top: 32px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .kpi-card, .bus-card, .section-card, .chart-card {
+            animation: fadeIn 0.3s ease-out;
         }
     </style>
 </head>
@@ -392,17 +433,14 @@
     </div>
 
     <div class="dashboard">
-        <!-- Login -->
         <div id="loginScreen" class="login-card">
-            <h2 style="margin-bottom: 16px;">Accès régulation</h2>
-            <p style="color: #5a6e7c; margin-bottom: 16px;">Espace réservé au centre de supervision</p>
+            <h2 style="margin-bottom: 8px;">Accès régulation</h2>
+            <p style="color: #6c757d; margin-bottom: 24px;">Espace sécurisé - Centre de supervision</p>
             <input type="password" id="passwordInput" placeholder="Mot de passe" onkeypress="if(event.key==='Enter') checkPassword()">
             <button class="btn-icon" onclick="checkPassword()" style="width:100%;">Se connecter</button>
         </div>
 
-        <!-- Dashboard Content -->
         <div id="dashboardContent" style="display: none;">
-            <!-- KPIs -->
             <div class="kpi-grid">
                 <div class="kpi-card"><div class="kpi-label">Passagers (mois)</div><div class="kpi-value" id="totalPassengers">0</div></div>
                 <div class="kpi-card"><div class="kpi-label">Services aujourd'hui</div><div class="kpi-value" id="todayTrips">0</div></div>
@@ -410,7 +448,6 @@
                 <div class="kpi-card"><div class="kpi-label">Kilomètres parcourus</div><div class="kpi-value" id="totalKm">0</div></div>
             </div>
 
-            <!-- Bus en service -->
             <div class="buses-grid">
                 <div class="bus-card">
                     <div class="bus-header">
@@ -419,7 +456,6 @@
                     </div>
                     <div class="bus-content">
                         <div class="info-line"><span>Position</span><strong id="charismaLocation">-</strong></div>
-                        <div class="info-line"><span>Chauffeur</span><span id="charismaDriver">-</span></div>
                         <div class="progress-bar"><div class="progress-fill" id="charismaProgress"></div></div>
                         <div class="info-line"><span>Passagers</span><span id="charismaPassengers">0</span></div>
                         <div class="info-line"><span>Départ</span><span id="charismaStart">-</span></div>
@@ -432,7 +468,6 @@
                     </div>
                     <div class="bus-content">
                         <div class="info-line"><span>Position</span><strong id="navieoLocation">-</strong></div>
-                        <div class="info-line"><span>Chauffeur</span><span id="navieoDriver">-</span></div>
                         <div class="progress-bar"><div class="progress-fill" id="navieoProgress"></div></div>
                         <div class="info-line"><span>Passagers</span><span id="navieoPassengers">0</span></div>
                         <div class="info-line"><span>Départ</span><span id="navieoStart">-</span></div>
@@ -440,14 +475,12 @@
                 </div>
             </div>
 
-            <!-- Graphiques -->
             <div class="charts-row">
-                <div class="chart-card"><h4 style="margin-bottom:12px;">Fréquentation par ligne</h4><canvas id="lineChart"></canvas></div>
-                <div class="chart-card"><h4 style="margin-bottom:12px;">Évolution hebdomadaire</h4><canvas id="trendChart"></canvas></div>
+                <div class="chart-card"><h4 style="margin-bottom: 16px;">Fréquentation par ligne</h4><canvas id="lineChart"></canvas></div>
+                <div class="chart-card"><h4 style="margin-bottom: 16px;">Évolution hebdomadaire</h4><canvas id="trendChart"></canvas></div>
             </div>
         </div>
 
-        <!-- Planning Tab -->
         <div id="tabPlanning" class="tab-content">
             <div class="section-card">
                 <div class="section-header"><h3>Programmation des services</h3><button class="btn-icon" onclick="openMissionModal()">+ Nouveau service</button></div>
@@ -458,13 +491,8 @@
                     </table>
                 </div>
             </div>
-            <div class="section-card">
-                <div class="section-header"><h3>Calendrier mensuel</h3><button class="btn-icon" onclick="exportPlanning()">Exporter</button></div>
-                <div style="padding: 20px;" id="calendarView"></div>
-            </div>
         </div>
 
-        <!-- Flotte Tab -->
         <div id="tabFleet" class="tab-content">
             <div class="section-card">
                 <div class="section-header"><h3>Chauffeurs</h3><button class="btn-icon" onclick="openDriverModal()">+ Ajouter</button></div>
@@ -495,55 +523,53 @@
             </div>
         </div>
 
-        <!-- Reports Tab -->
         <div id="tabReports" class="tab-content">
             <div class="section-card">
                 <div class="section-header"><h3>Rapports d'activité</h3><button class="btn-icon" onclick="generateReport()">Générer rapport</button></div>
                 <div style="overflow-x: auto;">
                     <table class="data-table">
-                        <thead><tr><th>Période</th><th>Total passagers</th><th>Services effectués</th><th>Kilomètres</th><th>Actions</th></tr></thead>
+                        <thead><tr><th>Période</th><th>Total passagers</th><th>Services effectués</th><th>Actions</th></tr></thead>
                         <tbody id="reportsList"></tbody>
                     </table>
                 </div>
             </div>
         </div>
 
-        <div class="footer">Centre de régulation • Données en temps réel • Dernière mise à jour: <span id="lastUpdate"></span></div>
+        <div class="footer">Centre de régulation • Données en temps réel</div>
     </div>
 
-    <!-- Modals -->
-    <div id="missionModal" class="modal"><div class="modal-content"><h3>Programmer un service</h3>
+    <div id="missionModal" class="modal"><div class="modal-content"><h3 style="margin-bottom: 20px;">Programmer un service</h3>
         <div class="form-group"><label>Date</label><input type="date" id="missionDate"></div>
         <div class="form-group"><label>Ligne</label><select id="missionLine"><option value="charisma">Bus Charisma</option><option value="navieo">Navieo</option></select></div>
         <div class="form-group"><label>Chauffeur</label><select id="missionDriver"></select></div>
         <div class="form-group"><label>Accompagnateur</label><select id="missionAccompanist"></select></div>
         <div class="form-group"><label>Véhicule</label><select id="missionVehicle"></select></div>
         <div class="form-group"><label>Départ</label><input type="time" id="missionTime" value="07:30"></div>
-        <div style="display:flex; gap:12px; margin-top:20px;"><button onclick="closeModal('missionModal')" style="flex:1; padding:12px; background:#f8fafd; border:none; border-radius:50px;">Annuler</button><button onclick="saveMission()" class="btn-icon">Enregistrer</button></div>
+        <div style="display:flex; gap:12px; margin-top:20px;"><button onclick="closeModal('missionModal')" style="flex:1; padding:14px; background:#f8fafd; border:none; border-radius:50px;">Annuler</button><button onclick="saveMission()" class="btn-icon">Enregistrer</button></div>
     </div></div>
 
-    <div id="driverModal" class="modal"><div class="modal-content"><h3>Ajouter un chauffeur</h3>
+    <div id="driverModal" class="modal"><div class="modal-content"><h3 style="margin-bottom: 20px;">Ajouter un chauffeur</h3>
         <div class="form-group"><input type="text" id="driverLast" placeholder="Nom"></div>
         <div class="form-group"><input type="text" id="driverFirst" placeholder="Prénom"></div>
         <div class="form-group"><input type="tel" id="driverPhone" placeholder="Téléphone"></div>
         <div class="form-group"><select id="driverLine"><option value="charisma">Bus Charisma</option><option value="navieo">Navieo</option><option value="both">Les deux</option></select></div>
-        <div style="display:flex; gap:12px;"><button onclick="closeModal('driverModal')" style="flex:1; padding:12px; background:#f8fafd; border:none;">Annuler</button><button onclick="saveDriver()" class="btn-icon">Ajouter</button></div>
+        <div style="display:flex; gap:12px;"><button onclick="closeModal('driverModal')" style="flex:1; padding:14px; background:#f8fafd; border:none; border-radius:50px;">Annuler</button><button onclick="saveDriver()" class="btn-icon">Ajouter</button></div>
     </div></div>
 
-    <div id="accompanistModal" class="modal"><div class="modal-content"><h3>Ajouter un accompagnateur</h3>
+    <div id="accompanistModal" class="modal"><div class="modal-content"><h3 style="margin-bottom: 20px;">Ajouter un accompagnateur</h3>
         <div class="form-group"><input type="text" id="accLast" placeholder="Nom"></div>
         <div class="form-group"><input type="text" id="accFirst" placeholder="Prénom"></div>
         <div class="form-group"><input type="tel" id="accPhone" placeholder="Téléphone"></div>
         <div class="form-group"><select id="accLine"><option value="charisma">Bus Charisma</option><option value="navieo">Navieo</option><option value="both">Les deux</option></select></div>
-        <div style="display:flex; gap:12px;"><button onclick="closeModal('accompanistModal')" style="flex:1; padding:12px; background:#f8fafd;">Annuler</button><button onclick="saveAccompanist()" class="btn-icon">Ajouter</button></div>
+        <div style="display:flex; gap:12px;"><button onclick="closeModal('accompanistModal')" style="flex:1; padding:14px; background:#f8fafd; border:none;">Annuler</button><button onclick="saveAccompanist()" class="btn-icon">Ajouter</button></div>
     </div></div>
 
-    <div id="vehicleModal" class="modal"><div class="modal-content"><h3>Ajouter un véhicule</h3>
+    <div id="vehicleModal" class="modal"><div class="modal-content"><h3 style="margin-bottom: 20px;">Ajouter un véhicule</h3>
         <div class="form-group"><input type="text" id="vehiclePlate" placeholder="Immatriculation"></div>
         <div class="form-group"><input type="text" id="vehicleModel" placeholder="Modèle"></div>
         <div class="form-group"><select id="vehicleLine"><option value="charisma">Bus Charisma</option><option value="navieo">Navieo</option></select></div>
         <div class="form-group"><input type="number" id="vehicleKm" placeholder="Kilométrage"></div>
-        <div style="display:flex; gap:12px;"><button onclick="closeModal('vehicleModal')" style="flex:1; padding:12px; background:#f8fafd;">Annuler</button><button onclick="saveVehicle()" class="btn-icon">Ajouter</button></div>
+        <div style="display:flex; gap:12px;"><button onclick="closeModal('vehicleModal')" style="flex:1; padding:14px; background:#f8fafd;">Annuler</button><button onclick="saveVehicle()" class="btn-icon">Ajouter</button></div>
     </div></div>
 
     <script>
@@ -574,8 +600,6 @@
 
         function loadData() {
             loadDrivers(); loadAccompanists(); loadMissions(); loadPassengers(); loadVehicles(); loadBusStatus();
-            updateTime();
-            setInterval(updateTime, 1000);
         }
 
         function loadDrivers() {
@@ -584,6 +608,7 @@
                 drivers = data ? Object.values(data) : [];
                 updateDriversList();
                 updateSelectOptions();
+                document.getElementById('activeDrivers').innerHTML = drivers.length;
             });
         }
 
@@ -610,7 +635,6 @@
                 const data = snapshot.val();
                 missions = data ? Object.values(data) : [];
                 updateMissionsList();
-                updateCalendar();
                 document.getElementById('todayTrips').innerHTML = missions.filter(m => m.date === new Date().toISOString().split('T')[0]).length;
             });
         }
@@ -636,22 +660,10 @@
                     document.getElementById(`${line}Status`).innerHTML = 'En service';
                     document.getElementById(`${line}Status`).className = 'bus-status status-active';
                     document.getElementById(`${line}Location`).innerHTML = data.etape || '-';
+                    if (data.time) document.getElementById(`${line}Start`).innerHTML = data.time;
                     const stops = line === 'charisma' ? ['depart','brement','noisy','retour'] : ['chelles','mairie','gare','neuilly','lamare','gagnyarena','jeanmoulin','henribarbusse','garegagny','chateau','rosny','van','ruffins','mairiemontreuil','croixchavaux','gaulle','eglise'];
                     const index = stops.indexOf(data.etape);
                     if (index !== -1) document.getElementById(`${line}Progress`).style.width = `${(index/(stops.length-1))*100}%`;
-                    if (data.time) document.getElementById(`${line}Start`).innerHTML = data.time;
-                }
-            });
-            // Mise à jour des affectations
-            database.ref('current-route').on('value', (snapshot) => {
-                const data = snapshot.val();
-                if (data && data.route) {
-                    const line = data.route;
-                    const todayMission = missions.find(m => m.date === new Date().toISOString().split('T')[0] && m.line === line);
-                    if (todayMission) {
-                        const driver = drivers.find(d => d.id === todayMission.driverId);
-                        document.getElementById(`${line}Driver`).innerHTML = driver ? `${driver.prenom} ${driver.nom}` : '-';
-                    }
                 }
             });
         }
@@ -670,8 +682,8 @@
             tbody.innerHTML = drivers.map(d => `
                 <tr><td>${d.nom || ''}</td><td>${d.prenom || ''}</td><td>${d.telephone || ''}</td>
                 <td>${d.ligne === 'charisma' ? 'Bus Charisma' : d.ligne === 'navieo' ? 'Navieo' : 'Les deux'}</td>
-                <td><span class="status-active" style="padding:2px 8px;">Disponible</span></td>
-                <td><button onclick="deleteDriver('${d.id}')" class="btn-outline">Supprimer</button></td>
+                <td><span class="status-active" style="padding:4px 12px; border-radius:30px;">Disponible</span></td>
+                <td><button onclick="deleteDriver('${d.id}')" class="btn-outline">Supprimer</button></td></tr>
             `).join('');
         }
 
@@ -681,8 +693,8 @@
             tbody.innerHTML = accompanists.map(a => `
                 <tr><td>${a.nom || ''}</td><td>${a.prenom || ''}</td><td>${a.telephone || ''}</td>
                 <td>${a.ligne === 'charisma' ? 'Bus Charisma' : a.ligne === 'navieo' ? 'Navieo' : 'Les deux'}</td>
-                <td><span class="status-active" style="padding:2px 8px;">Disponible</span></td>
-                <td><button onclick="deleteAccompanist('${a.id}')" class="btn-outline">Supprimer</button></td>
+                <td><span class="status-active" style="padding:4px 12px; border-radius:30px;">Disponible</span></td>
+                <td><button onclick="deleteAccompanist('${a.id}')" class="btn-outline">Supprimer</button></td></tr>
             `).join('');
         }
 
@@ -691,8 +703,8 @@
             if (vehicles.length === 0) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Aucun véhicule</td></tr>'; return; }
             tbody.innerHTML = vehicles.map(v => `
                 <tr><td>${v.plate || ''}</td><td>${v.model || ''}</td><td>${v.line === 'charisma' ? 'Bus Charisma' : 'Navieo'}</td>
-                <td>${v.km || 0} km</td><td><span class="status-active" style="padding:2px 8px;">En service</span></td>
-                <td><button onclick="deleteVehicle('${v.id}')" class="btn-outline">Supprimer</button></td>
+                <td>${v.km || 0} km</td><td><span class="status-active" style="padding:4px 12px;">En service</span></td>
+                <td><button onclick="deleteVehicle('${v.id}')" class="btn-outline">Supprimer</button></td></tr>
             `).join('');
         }
 
@@ -701,38 +713,12 @@
             if (missions.length === 0) { tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Aucun service programmé</td></tr>'; return; }
             tbody.innerHTML = missions.sort((a,b)=>a.date?.localeCompare(b.date)).map(m => {
                 const isToday = m.date === new Date().toISOString().split('T')[0];
-                return `
-                    <tr><td>${m.date}</td><td>${m.line === 'charisma' ? 'Bus Charisma' : 'Navieo'}</td>
-                    <td>${m.driverName || '-'}</td><td>${m.accompanistName || '-'}</td>
-                    <td>${m.startTime || '-'}</td>
-                    <td>${isToday ? '<span class="status-active">Aujourd\'hui</span>' : 'Programmé'}</td>
-                    <td><button onclick="deleteMission('${m.id}')" class="btn-outline">Supprimer</button></td>
-                `;
+                return `<tr><td>${m.date}</td><td>${m.line === 'charisma' ? 'Bus Charisma' : 'Navieo'}</td>
+                <td>${m.driverName || '-'}</td><td>${m.accompanistName || '-'}</td>
+                <td>${m.startTime || '-'}</td>
+                <td>${isToday ? '<span class="status-active">Aujourd\'hui</span>' : 'Programmé'}</td>
+                <td><button onclick="deleteMission('${m.id}')" class="btn-outline">Supprimer</button></td></tr>`;
             }).join('');
-        }
-
-        function updateCalendar() {
-            const container = document.getElementById('calendarView');
-            const months = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
-            const now = new Date();
-            const currentMonth = now.getMonth();
-            const currentYear = now.getFullYear();
-            
-            let html = `<div style="display:grid; grid-template-columns:repeat(7,1fr); gap:8px; text-align:center;">`;
-            html += `<div style="font-weight:600;">Lun</div><div style="font-weight:600;">Mar</div><div style="font-weight:600;">Mer</div><div style="font-weight:600;">Jeu</div><div style="font-weight:600;">Ven</div><div style="font-weight:600;">Sam</div><div style="font-weight:600;">Dim</div>`;
-            
-            const firstDay = new Date(currentYear, currentMonth, 1);
-            const startDay = firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1;
-            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-            
-            for (let i = 0; i < startDay; i++) html += `<div></div>`;
-            for (let d = 1; d <= daysInMonth; d++) {
-                const dateStr = `${currentYear}-${String(currentMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-                const hasMission = missions.some(m => m.date === dateStr);
-                html += `<div style="padding:8px; border-radius:12px; background:${hasMission ? '#e8f5e9' : '#f8fafd'};">${d}${hasMission ? ' ✓' : ''}</div>`;
-            }
-            html += `</div>`;
-            container.innerHTML = html;
         }
 
         function updateSelectOptions() {
@@ -751,7 +737,7 @@
             });
             trendChart = new Chart(ctx2, {
                 type: 'line',
-                data: { labels: ['S1', 'S2', 'S3', 'S4'], datasets: [{ label: 'Passagers', data: [0, 0, 0, 0], borderColor: '#2c5a8c', tension: 0.3 }] },
+                data: { labels: ['Semaine 1', 'Semaine 2', 'Semaine 3', 'Semaine 4'], datasets: [{ label: 'Passagers', data: [0, 0, 0, 0], borderColor: '#2c5a8c', tension: 0.3, fill: false }] },
                 options: { responsive: true }
             });
         }
@@ -804,7 +790,6 @@
             const newVehicle = { id: Date.now().toString(), plate, model, line: document.getElementById('vehicleLine').value, km: document.getElementById('vehicleKm').value || 0 };
             database.ref('vehicles/' + newVehicle.id).set(newVehicle);
             closeModal('vehicleModal');
-            document.getElementById('vehiclePlate').value = ''; document.getElementById('vehicleModel').value = ''; document.getElementById('vehicleKm').value = '';
         }
 
         function deleteDriver(id) { if (confirm('Supprimer ce chauffeur ?')) database.ref('drivers/' + id).remove(); }
@@ -812,16 +797,9 @@
         function deleteVehicle(id) { if (confirm('Supprimer ce véhicule ?')) database.ref('vehicles/' + id).remove(); }
         function deleteMission(id) { if (confirm('Supprimer ce service ?')) database.ref('missions/' + id).remove(); }
 
-        function exportPlanning() {
-            let csv = "Date,Ligne,Chauffeur,Accompagnateur,Départ\n";
-            missions.forEach(m => { csv += `${m.date},${m.line === 'charisma' ? 'Bus Charisma' : 'Navieo'},${m.driverName || '-'},${m.accompanistName || '-'},${m.startTime || '-'}\n`; });
-            const blob = new Blob(["\uFEFF" + csv], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = `planning_${new Date().toISOString().split('T')[0]}.csv`; link.click(); URL.revokeObjectURL(link.href);
-        }
-
         function generateReport() {
             const total = Object.values(passengersData).reduce((a,b) => a+b, 0);
-            alert(`Rapport généré\nTotal passagers: ${total}\nServices: ${missions.length}\nChauffeurs: ${drivers.length}\nAccompagnateurs: ${accompanists.length}`);
+            alert(`Rapport généré\nTotal passagers: ${total}\nServices programmés: ${missions.length}\nChauffeurs: ${drivers.length}\nAccompagnateurs: ${accompanists.length}\nVéhicules: ${vehicles.length}`);
         }
 
         function switchTab(tab) {
@@ -836,7 +814,6 @@
         function openAccompanistModal() { document.getElementById('accompanistModal').style.display = 'flex'; }
         function openVehicleModal() { document.getElementById('vehicleModal').style.display = 'flex'; }
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-        function updateTime() { document.getElementById('lastUpdate').innerHTML = new Date().toLocaleTimeString(); }
     </script>
 </body>
 </html>
